@@ -7,17 +7,17 @@
 
 </script>
 
-<div class="container mx-auto">
-    <div class="">
-        {storyline.title}
+<div class="container mx-auto bg-primary-700 p-5 space-y-5">
+    <div class="card-header">
+        <h2>{storyline.title}</h2>
     </div>
-    <div class="flex gap-10">
+    <div class="flex gap-5">
         {#each storyline.stories as story}
             <ManageEntry story={story}></ManageEntry>
-            <div class="items-center">&rsaquo;</div>
+            <div class="text-6xl my-auto">&rsaquo;</div>
         {/each}
     </div>
-    <div class="flex justify-start">
+    <div class="flex justify-start mt-5 space-x-5">
         <form action="?/storyline" method="DELETE">
             <button class="btn-icon variant-filled-primary">
                 <span><Icon icon="material-symbols:delete-outline"></Icon></span>
