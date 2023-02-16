@@ -141,7 +141,7 @@ def rmv_story(request):
     story = Story.objects.filter(uuid=uuid)
     
     if story.exists():
-        story.first().remove()
+        story.first().delete()
 
         return Response(status=200)
 
@@ -165,6 +165,16 @@ def edit_story(request):
 
         serialized = StorySerializer(story)
         return Response(serialized.data)
+
+@api_view(["PUT"])
+@permission_classes([IsAdminUser])
+def toggle_story(request):
+    uuid = request.data.get("uuid")
+    story = Story.objects.filter(uuid=uuid)
+    if story.exists():
+        story = story.first()
+        story.active = not story.active
+        story.save()
 
 ### Storylines ###
 
@@ -197,10 +207,11 @@ def rmv_storyline(request):
     storyline = StoryLine.objects.filter(uuid=uuid)
     
     if storyline.exists():
+        storyline = storyline.first()
         for story in storyline.stories.all():
-            story.remove()
+            story.delete()
         
-        storyline.remove()
+        storyline.delete()
         
         return Response(status=200)
 

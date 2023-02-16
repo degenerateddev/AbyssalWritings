@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type StoryLine from "$lib/types";
+    import type { StoryLine } from "$lib/types";
     import { onMount, onDestroy } from 'svelte';
     import Icon from '@iconify/svelte';
     import { Stepper, Step, type ModalSettings, type ModalComponent } from '@skeletonlabs/skeleton';
@@ -169,7 +169,7 @@
     }
 
     async function save() {
-        const all: Object = editor.getJSON();
+        const all: any = editor.getJSON();
         console.log(all)
         all.content.forEach(elem => {
             if (elem.content !== undefined) {

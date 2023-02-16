@@ -14,7 +14,7 @@ type User = {
     avatar: string;
 }
 
-type Tokens = {
+export type Tokens = {
     refresh: string;
     access: string;
 }
@@ -26,7 +26,7 @@ type StoryComment = {
     date: string;
 }
 
-type Story = {
+export type Story = {
     uuid: string;
     title: string;
     content: string;
@@ -47,7 +47,8 @@ type Genre = {
     banner: string;
 }
 
-type StoryLine = {
+export type StoryLine = {
+    uuid: string;
     title: string;
     description: string;
     

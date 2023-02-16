@@ -1,9 +1,9 @@
 <script lang="ts">
-    import type Story from "$lib/types";
+    import type { Story } from "$lib/types";
     import Banner from "comps/Banner.svelte";
     import Icon from "@iconify/svelte";
 
-    export let data: Object;
+    export let data;
 
     export let liked: boolean = false;
 

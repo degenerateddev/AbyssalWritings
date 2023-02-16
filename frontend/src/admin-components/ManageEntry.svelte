@@ -1,16 +1,32 @@
 <script lang="ts">
     import type { Story } from "$lib/types";
-    import Icon from "@iconify/svelte";
+    import Icon, { replaceIDs } from "@iconify/svelte";
     import { SlideToggle } from '@skeletonlabs/skeleton';
+    import { enhance } from '$app/forms';
+    import { fade } from 'svelte/transition';
+	import { redirect } from "@sveltejs/kit";
 
     export let story: Story;
 
-    function setActive() {
+    let show: boolean = true;
 
+    async function toggle() {
+        const uuid: string = "";
+        const response = await fetch("http://127.0.0.1:8000/admin/toggle-story/", {
+            method: "PUT",
+            headers: new Headers({
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " //+ tokens.access
+            }),
+            body: JSON.stringify({
+                "uuid": uuid
+            })
+        })
     }
 </script>
 
-<div class="card card-hover">
+{#if show}
+<div class="card card-hover" transition:fade>
     <div class="card-header">
         <h3>{story.title}</h3>
     </div>
@@ -18,14 +34,16 @@
         <img src="http://127.0.0.1:8000{story.image}" class="object-contain max-h-72" alt="img" />
     </div>
     <div class="card-footer flex items-center mt-5 space-x-5">
-        <form action="?/story" method="DELETE">
-            <button class="btn-icon variant-filled-primary">
+        <form method="POST" action="admin/actions/rmv-story" use:enhance on:submit={() => show = false}>
+            <input type="hidden" value="{story.uuid}" name="uuid" />
+            <button class="btn-icon variant-filled-primary" type="submit">
                 <span><Icon icon="material-symbols:delete-outline"></Icon></span>
             </button>
         </form>
-        <button class="btn-icon variant-filled-primary" on:click={() => window.location.replace("/edit-" + story.uuid)}>
+        <button class="btn-icon variant-filled-primary" on:click={() => window.location.replace("/admin/edit-" + story.uuid)}>
             <span><Icon icon="material-symbols:edit-outline-rounded"></Icon></span>
         </button>
-        <SlideToggle bind:checked={story.active} on:change={setActive}></SlideToggle>
+        <SlideToggle bind:checked={story.active} on:change={toggle}></SlideToggle>
     </div>
 </div>
+{/if}

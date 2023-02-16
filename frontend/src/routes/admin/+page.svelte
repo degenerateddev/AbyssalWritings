@@ -2,7 +2,7 @@
     import ManageEntry from "admin-comps/ManageEntry.svelte";
     import StorylineEntry from "admin-comps/StorylineEntry.svelte";
 
-    export let data: Object;
+    export let data: any;
 </script>
 
 <div class="container mx-auto py-10">
@@ -15,7 +15,7 @@
         {/each}
     </div>
 
-    <div class="flex justify-start my-5">
+    <div class="flex justify-start mb-5 mt-16">
         <h1>Stories</h1>
     </div>
 

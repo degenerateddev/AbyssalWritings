@@ -51,6 +51,7 @@ class StorySerializer(ModelSerializer):
         return story
 
 class StoryLineSerializer(ModelSerializer):
+    uuid = serializers.UUIDField()
     title = serializers.CharField()
     description = serializers.CharField()
 
