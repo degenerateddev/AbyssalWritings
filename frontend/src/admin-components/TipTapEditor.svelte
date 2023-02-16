@@ -37,6 +37,9 @@
     let files : FileList;
     let img_uploaded : boolean = false;
 
+    var no_storyline: boolean = false;
+    var available_storylines: Array<StoryLine>;
+
     let CustomDocument = Document.extend({
         content: "heading block*",
     })
@@ -44,7 +47,7 @@
     onMount(async () => {
         // Collect additional parts for storyline
         if (uuid !== "") {
-            const response = await fetch("/admin/get-storyline-" + uuid, {
+            const response = await fetch("/admin/actions/get-storyline-" + uuid, {
                 method: "GET",
                 headers: new Headers({
                     "Content-Type": "application/json"
@@ -52,7 +55,27 @@
             })
             if (response.ok) {
                 const data = await response.json();
-                storyline = data.storyline
+
+                if (data.status === 404 || data.status === 500) {
+                    no_storyline = true
+                } else {
+                    storyline = data.storyline;
+                }
+            }
+        }
+
+        if (no_storyline) {
+            console.log("No Storyline")
+            const response = await fetch("/admin/actions/get-available-storylines", {
+                method: "GET",
+                headers: new Headers({
+                    "Content-Type": "application/json"
+                })
+            })
+
+            if (response.ok) {
+                const data = await response.json();
+                available_storylines = data.storylines;
             }
         }
 
@@ -313,6 +336,16 @@
         <FileButton multiple={false} button="variant-filled-primary rounded-full m-5" name="files" bind:files on:change={() => img_uploaded = true}>Image Upload</FileButton>
         {#if files !== undefined}
             <span>{files.item(0).name}</span>
+        {/if}
+        {#if no_storyline}
+            <div class="container space-y-5">
+                <h2>Add current story to storyline</h2>
+                {#if available_storylines !== undefined}
+                    {#each available_storylines as storyline}
+                        <button class="btn variant-ringed-primary w-full">{storyline.title}</button>
+                    {/each}
+                {/if}
+            </div>
         {/if}
     </div>
 </div>

@@ -18,6 +18,7 @@ urlpatterns = [
     path("admin/rmv-story/", views.rmv_story, name="rmv-story"),
     path("admin/toggle-story/", views.toggle_story, name="toggle-story"),
 
+    path("admin/get-available-storylines/", views.get_available_storylines, name="get-available-storylines"),
     path("admin/get-storyline/<uuid:uuid>/", views.get_storyline, name="get-storyline"),
     path("admin/add-storyline/", views.add_storyline, name="add-storyline"),
     path("admin/add-to-storyline/", views.add_to_storyline, name="add-to-storyline"),

@@ -3,9 +3,9 @@
 
     //https://github.com/umaranis/svelte-lexical
     export let data: any;
-    let uuid: string = data.uuid;
-    let title: string = data.title;
-    let content: string = data.content;
+    let uuid: string = data.story.uuid;
+    let title: string = data.story.title;
+    let content: string = data.story.content;
 </script>
 
 <div class="container mx-auto py-10">

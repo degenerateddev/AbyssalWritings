@@ -113,15 +113,26 @@ def story_overview(request):
 @permission_classes([IsAdminUser])
 def get_storyline(request, uuid):   # Takes story UUID and gets storyline
     story = Story.objects.filter(uuid=uuid)
-    storyline = StoryLine.objects.filter(stories__in=[story])
+    if story.exists():
+        story = story.first()
+        storyline = StoryLine.objects.filter(stories__in=[story])
 
-    if storyline.exists():
-        serializer = StoryLineSerializer(storyline.first())
+        if storyline.exists():
+            serializer = StoryLineSerializer(storyline.first())
 
-        return Response(serializer.data)
+            return Response(serializer.data)
     
-    return Response(status=404)
+    return Response({
+        "error": "Could not find corresponding storyline!"
+    })
 
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def get_available_storylines(request):
+    storylines = StoryLine.objects.all()
+    serialized = StoryLineSerializer(storylines, many=True)
+
+    return Response(serialized.data)
 
 @api_view(["POST"])
 @permission_classes([IsAdminUser])
