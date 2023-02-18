@@ -55,11 +55,17 @@ class StoryLineSerializer(ModelSerializer):
     title = serializers.CharField()
     description = serializers.CharField()
 
-    stories = StorySerializer(many=True)
+    stories = serializers.SerializerMethodField()
     
     class Meta:
         model = StoryLine
         fields = ("__all__")
+    
+    def get_stories(self, obj):
+        stories = obj.stories.all().order_by("date")
+        serialized = StorySerializer(stories, many=True)
+
+        return serialized.data
     
     def validate(self, unvalidated_data):
         return unvalidated_data

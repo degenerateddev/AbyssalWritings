@@ -8,6 +8,7 @@ urlpatterns = [
     path("showcase/", views.showcase, name="showcase"),
     path("genre/<str:genre>/", views.genre, name="genre"),
     path("story/<uuid:uuid>/", views.story, name="story"),
+    path("storyline/<uuid:uuid>/", views.storyline, name="storyline"),
 
     path("like/", views.like, name="like"),
     path("unlike/", views.unlike, name="unlike"),

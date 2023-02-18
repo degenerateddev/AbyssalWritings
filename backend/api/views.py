@@ -67,6 +67,14 @@ def story(request, uuid):
         serialized = StorySerializer(story.first())
         return Response(serialized.data)
 
+@api_view(["GET"])
+def storyline(request, uuid):
+    storyline = StoryLine.objects.filter(uuid=uuid)
+    
+    if storyline.exists():
+        serialized = StoryLineSerializer(storyline.first())
+        return Response(serialized.data)
+
 @api_view(["PUT"])
 @permission_classes([IsAuthenticated])
 def like(request):
