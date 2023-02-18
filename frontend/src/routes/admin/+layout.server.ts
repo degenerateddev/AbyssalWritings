@@ -1,9 +1,9 @@
 import type { LayoutServerLoad } from './$types';
-import type Tokens from "$lib/types";
+import type { Tokens } from "$lib/types";
 import { error, redirect } from '@sveltejs/kit';
 import { dev } from '$app/environment';
  
-export const load = (async ({ cookies, url }) => {
+export const load: LayoutServerLoad = (async ({ cookies, url }) => {
     const cookie = cookies.get('tokens');
 
     if (cookie !== undefined) {
@@ -37,7 +37,7 @@ export const load = (async ({ cookies, url }) => {
             if (response.ok) {
                 const data = await response.json();
                 console.log(data);
-                const new_tokens: Tokens = JSON.stringify({
+                const new_tokens: string = JSON.stringify({
                     access: data.access,
                     refresh: tokens.refresh
                 });

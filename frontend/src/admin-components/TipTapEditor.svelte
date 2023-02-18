@@ -195,7 +195,6 @@
 
     async function save() {
         const all: any = editor.getJSON();
-        console.log(all)
         all.content.forEach(elem => {   // Get story title
             if (elem.content !== undefined) {
                 if (elem.type === "heading" && elem.attrs.level === 1) {
@@ -211,7 +210,6 @@
         });
 
         content = editor.state.doc.textContent.replace(title, "") // gets entire text and removes first occurence of title (original title)
-        console.log(content)
         
         if (editing === false) {            
             const response = await fetch("/admin/actions/add", { // If not editing, add new
@@ -246,7 +244,7 @@
                             "Content-Type": "application/json"
                         }),
                         body: JSON.stringify({
-                            story: story.uuid,
+                            story: uuid,
                             storyline: set_storyline
                         })
                     });
@@ -258,7 +256,7 @@
             }
         } else {
             const response = await fetch("/admin/actions/edit", {    // if editing
-                method: "POST",
+                method: "PUT",
                 headers: new Headers({
                     "Content-Type": "application/json",
                     "Accept": "application/json"
@@ -271,7 +269,14 @@
             })
 
             if (response.ok) {
-                
+                const t: ToastSettings = {
+                    message: 'Story edited successfully',
+                    // Optional: The auto-hide settings
+                    autohide: true,
+                    timeout: 3000,
+                    classes: 'bg-gradient-to-tr from-green-400 to-green-900 text-white',
+                };
+                toastStore.trigger(t);
             }
         }
         
@@ -289,14 +294,20 @@
                 const response = await fetch("/admin/actions/upload-image", {
                     method: "POST",
                     headers: new Headers({
-                        "Content-Type": "application/x-www-form-urlencoded",
                         "Accept": "application/json"
                     }),
                     body: formData
                 })
 
                 if (response.ok) {
-                    
+                    const t: ToastSettings = {
+                        message: 'Image uploaded successfully',
+                        // Optional: The auto-hide settings
+                        autohide: true,
+                        timeout: 3000,
+                        classes: 'bg-gradient-to-tr from-green-400 to-green-900 text-white',
+                    };
+                    toastStore.trigger(t);
                 }
             }
         }
@@ -397,7 +408,9 @@
                 {/each}
             </Stepper>
         {/if}
-        <FileButton multiple={false} button="variant-filled-primary rounded-full m-5" name="files" bind:files on:change={img_upload}>Image Upload</FileButton>
+        {#if uuid}
+            <FileButton multiple={false} button="variant-filled-primary rounded-full m-5" name="files" bind:files on:change={img_upload}>Image Upload</FileButton>
+        {/if}
         {#if files !== undefined}
             <span>{files.item(0).name}</span>
         {/if}

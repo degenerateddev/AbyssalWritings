@@ -2,7 +2,7 @@ import type { RequestHandler } from './$types';
 import type { Tokens } from "$lib/types";
 import { json } from '@sveltejs/kit';
  
-export const POST = (async ({ cookies, request }) => {
+export const PUT = (async ({ cookies, request }) => {
     let data = await request.formData();
     const title = data.get("title");
     const content = data.get("content");
@@ -20,9 +20,9 @@ export const POST = (async ({ cookies, request }) => {
             "Authorization": "Bearer " + access
         }),
         body: JSON.stringify({
-            "uuid": uuid,
-            "title": title,
-            "content": content
+            uuid: uuid,
+            title: title,
+            content: content
         })
     })
 
