@@ -33,12 +33,14 @@
     export let title: string = "";
     export let content: string = ``;
     export let uuid: string = "";
+    export let editing: boolean = false;
 
     let files : FileList;
     let img_uploaded : boolean = false;
 
     var no_storyline: boolean = false;
     var available_storylines: Array<StoryLine>;
+    var set_storyline: string;  // Contains newly set Storyline when there's not a Storyline existing already
 
     let CustomDocument = Document.extend({
         content: "heading block*",
@@ -46,7 +48,7 @@
   
     onMount(async () => {
         // Collect additional parts for storyline
-        if (uuid !== "") {
+        if (editing && uuid !== "") {
             const response = await fetch("/admin/actions/get-storyline-" + uuid, {
                 method: "GET",
                 headers: new Headers({
@@ -169,7 +171,7 @@
       }
     })
 
-    function pre_save() {
+    function pre_save() { // Checks if story has no image and if story isn't being edited but new 
         if (img_uploaded === false && uuid === "") {
             const confirm: ModalSettings = {
                 type: 'confirm',
@@ -194,7 +196,7 @@
     async function save() {
         const all: any = editor.getJSON();
         console.log(all)
-        all.content.forEach(elem => {
+        all.content.forEach(elem => {   // Get story title
             if (elem.content !== undefined) {
                 if (elem.type === "heading" && elem.attrs.level === 1) {
                     title = elem.content[0].text;
@@ -211,31 +213,93 @@
         content = editor.state.doc.textContent.replace(title, "") // gets entire text and removes first occurence of title (original title)
         console.log(content)
         
-        
-        const response = await fetch("/admin/actions/add", {
-            method: "POST",
-            headers: new Headers({
-                "Content-Type": "application/x-www-form-urlencoded",
-                "Accept": "application/json"
-            }),
-            body: JSON.stringify({
-                title: title,
-                content: content,
-                image: files.item(0) || undefined
+        if (editing === false) {            
+            const response = await fetch("/admin/actions/add", { // If not editing, add new
+                method: "POST",
+                headers: new Headers({
+                    "Content-Type": "application/x-www-form-urlencoded",
+                    "Accept": "application/json"
+                }),
+                body: JSON.stringify({
+                    title: title,
+                    content: content
+                })
             })
-        })
 
-        if (response.ok) {
-            const t: ToastSettings = {
-                message: 'Save successful',
-                // Optional: The auto-hide settings
-                autohide: true,
-                timeout: 3000,
-                classes: 'bg-gradient-to-tr from-green-400 to-green-900 text-white',
-            };
-            toastStore.trigger(t);
+            if (response.ok) {
+                const data = await response.json();
+                uuid = data.story.uuid;
+
+                const t: ToastSettings = {
+                    message: 'Save successful',
+                    // Optional: The auto-hide settings
+                    autohide: true,
+                    timeout: 3000,
+                    classes: 'bg-gradient-to-tr from-green-400 to-green-900 text-white',
+                };
+                toastStore.trigger(t);
+
+                if (no_storyline && set_storyline !== undefined) { // Check if there's a better way to check all that
+                    const response = await fetch("/admin/actions/add-to-storyline", { // Add to storyline if not already
+                        method: "POST",
+                        headers: new Headers({
+                            "Content-Type": "application/json"
+                        }),
+                        body: JSON.stringify({
+                            story: story.uuid,
+                            storyline: set_storyline
+                        })
+                    });
+
+                    if (response.ok) {
+                        console.log("Added successfully")
+                    }
+                }
+            }
+        } else {
+            const response = await fetch("/admin/actions/edit", {    // if editing
+                method: "POST",
+                headers: new Headers({
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                }),
+                body: JSON.stringify({
+                    uuid: uuid,
+                    title: title,
+                    content: content
+                })
+            })
+
+            if (response.ok) {
+                
+            }
         }
         
+    }
+
+    async function img_upload() {
+        img_uploaded = true
+
+        const formData = new FormData();
+        if (files !== undefined) {
+            const image: File | null = files.item(0);
+            if (image !== null && uuid !== "" && uuid !== undefined) {
+                formData.append("image", image)
+                formData.append("uuid", uuid)
+                const response = await fetch("/admin/actions/upload-image", {
+                    method: "POST",
+                    headers: new Headers({
+                        "Content-Type": "application/x-www-form-urlencoded",
+                        "Accept": "application/json"
+                    }),
+                    body: formData
+                })
+
+                if (response.ok) {
+                    
+                }
+            }
+        }
     }
 </script>
   
@@ -333,7 +397,7 @@
                 {/each}
             </Stepper>
         {/if}
-        <FileButton multiple={false} button="variant-filled-primary rounded-full m-5" name="files" bind:files on:change={() => img_uploaded = true}>Image Upload</FileButton>
+        <FileButton multiple={false} button="variant-filled-primary rounded-full m-5" name="files" bind:files on:change={img_upload}>Image Upload</FileButton>
         {#if files !== undefined}
             <span>{files.item(0).name}</span>
         {/if}
@@ -342,7 +406,7 @@
                 <h2>Add current story to storyline</h2>
                 {#if available_storylines !== undefined}
                     {#each available_storylines as storyline}
-                        <button class="btn variant-ringed-primary w-full">{storyline.title}</button>
+                        <button on:click={() => set_storyline = storyline.uuid} class="btn variant-ghost-primary w-full focus:variant-filled-primary duration-150">{storyline.title}</button>
                     {/each}
                 {/if}
             </div>

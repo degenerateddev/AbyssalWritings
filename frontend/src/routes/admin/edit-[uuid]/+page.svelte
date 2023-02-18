@@ -9,5 +9,5 @@
 </script>
 
 <div class="container mx-auto py-10">
-    <TipTapEditor uuid={uuid} title={title} content={content} />
+    <TipTapEditor uuid={uuid} title={title} content={content} editing={true} />
 </div>

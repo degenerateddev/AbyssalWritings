@@ -138,9 +138,24 @@ def get_available_storylines(request):
 @permission_classes([IsAdminUser])
 def add_story(request):
     print(request.data)
-    serializer = StorySerializer(data=request.data, files=request.FILES, context={"request": request})
+    serializer = StorySerializer(data=request.data, context={"request": request})
     if serializer.is_valid(raise_exception=True):
         story = serializer.save()
+        
+        serialized = StorySerializer(story)
+        return Response(serialized.data)
+
+@api_view(["PUT"])
+@permission_classes([IsAdminUser])
+def add_image(request):
+    uuid = request.data.get("uuid")
+
+    story = Story.objects.filter(uuid=uuid)
+    if story.exists():
+        story = story.first()
+        img = request.data.get("image")
+        story.image = img
+        story.save()
         
         serialized = StorySerializer(story)
         return Response(serialized.data)

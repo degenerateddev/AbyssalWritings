@@ -10,7 +10,6 @@
 
     onMount(() => {
         storyStore.subscribe(s => { // or try get(storyStore);
-            console.log(s);
             if (s !== undefined) {
                 uuid = s.uuid;
             }

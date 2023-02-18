@@ -14,6 +14,7 @@ urlpatterns = [
 
     path("admin/overview/", views.story_overview, name="overview"),
     path("admin/add-story/", views.add_story, name="add-story"),
+    path("admin/add-image/", views.add_image, name="add-image"),
     path("admin/edit-story/", views.edit_story, name="edit-story"),
     path("admin/rmv-story/", views.rmv_story, name="rmv-story"),
     path("admin/toggle-story/", views.toggle_story, name="toggle-story"),
