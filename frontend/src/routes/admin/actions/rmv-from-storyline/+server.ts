@@ -2,7 +2,7 @@ import type { RequestHandler } from './$types';
 import type { Tokens } from "$lib/types";
 import { json } from '@sveltejs/kit';
  
-export const POST = (async ({ cookies, request }) => {
+export const PUT = (async ({ cookies, request }) => {
     let data = await request.formData();
     const body = Object.fromEntries(data);
     const formatted = JSON.parse(Object.keys(body)[0])
@@ -13,15 +13,15 @@ export const POST = (async ({ cookies, request }) => {
     const tokens: Tokens = JSON.parse(cookie || "");
     const access: string = tokens.access;
 
-    const response = await fetch("http://127.0.0.1:8000/api/admin/add-to-storyline/", {
+    const response = await fetch("http://127.0.0.1:8000/api/admin/rmv-from-storyline/", {
         method: "PUT",
         headers: new Headers({
             "Content-Type": "application/json",
             "Authorization": "Bearer " + access
         }),
         body: JSON.stringify({
-            story: story,
-            storyline: storyline
+            storyline_uuid: storyline,
+            story_uuid: story
         })
     })
 

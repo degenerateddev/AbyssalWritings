@@ -40,7 +40,6 @@
 
     var no_storyline: boolean = false;
     var available_storylines: Array<StoryLine>;
-    var set_storyline: string;  // Contains newly set Storyline when there's not a Storyline existing already
 
     let CustomDocument = Document.extend({
         content: "heading block*",
@@ -48,6 +47,7 @@
   
     onMount(async () => {
         // Collect additional parts for storyline
+        // Check if story is in storyline. Display storyline if true, or set "no_storyline = true" if false
         if (editing && uuid !== "") {
             const response = await fetch("/admin/actions/get-storyline-" + uuid, {
                 method: "GET",
@@ -66,9 +66,9 @@
             }
         }
 
-        if (no_storyline) {
+        if (no_storyline) {     // If not part of storyline
             console.log("No Storyline")
-            const response = await fetch("/admin/actions/get-available-storylines", {
+            const response = await fetch("/admin/actions/get-available-storylines", {   // Fetch all available storylines to add story to
                 method: "GET",
                 headers: new Headers({
                     "Content-Type": "application/json"
@@ -236,23 +236,6 @@
                     classes: 'bg-gradient-to-tr from-green-400 to-green-900 text-white',
                 };
                 toastStore.trigger(t);
-
-                if (no_storyline && set_storyline !== undefined) { // Check if there's a better way to check all that
-                    const response = await fetch("/admin/actions/add-to-storyline", { // Add to storyline if not already
-                        method: "POST",
-                        headers: new Headers({
-                            "Content-Type": "application/json"
-                        }),
-                        body: JSON.stringify({
-                            story: uuid,
-                            storyline: set_storyline
-                        })
-                    });
-
-                    if (response.ok) {
-                        console.log("Added successfully")
-                    }
-                }
             }
         } else {
             const response = await fetch("/admin/actions/edit", {    // if editing
@@ -309,6 +292,33 @@
                     };
                     toastStore.trigger(t);
                 }
+            }
+        }
+    }
+
+    async function add_to_storyline(storyline_uuid: string | undefined) {
+        if (no_storyline && storyline_uuid !== undefined) { // Check if there's a better way to check all that
+            const response = await fetch("/admin/actions/add-to-storyline", { // Add to storyline if not already
+                method: "POST",
+                headers: new Headers({
+                    "Content-Type": "application/x-www-form-urlencoded",
+                    "Accept": "application/json"
+                }),
+                body: JSON.stringify({
+                    story: uuid,
+                    storyline: storyline_uuid
+                })
+            });
+
+            if (response.ok) {
+                const t: ToastSettings = {
+                    message: 'Added to storyline',
+                    // Optional: The auto-hide settings
+                    autohide: true,
+                    timeout: 3000,
+                    classes: 'bg-gradient-to-tr from-green-400 to-green-900 text-white',
+                };
+                toastStore.trigger(t);
             }
         }
     }
@@ -419,7 +429,7 @@
                 <h2>Add current story to storyline</h2>
                 {#if available_storylines !== undefined}
                     {#each available_storylines as storyline}
-                        <button on:click={() => set_storyline = storyline.uuid} class="btn variant-ghost-primary w-full focus:variant-filled-primary duration-150">{storyline.title}</button>
+                        <button on:click={() => add_to_storyline(storyline.uuid)} class="btn variant-ghost-primary w-full focus:variant-filled-primary duration-150">{storyline.title}</button>
                     {/each}
                 {/if}
             </div>

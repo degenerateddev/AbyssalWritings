@@ -2,6 +2,7 @@ from django.shortcuts import render
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.views import Response
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework import status
 
 import random
 
@@ -226,6 +227,10 @@ def add_to_storyline(request):
         if story.exists():
             storyline.first().stories.add(story.first())
 
+            return Response(status=status.HTTP_200_OK)
+    
+    return Response(status=status.HTTP_404_NOT_FOUND)
+
 @api_view(["DELETE"])
 @permission_classes([IsAdminUser])
 def rmv_storyline(request):
@@ -240,6 +245,26 @@ def rmv_storyline(request):
         storyline.delete()
         
         return Response(status=200)
+
+@api_view(["PUT"])
+@permission_classes([IsAdminUser])
+def rmv_from_storyline(request):
+    storyline_uuid = request.data.get("storyline_uuid")
+    storyline = StoryLine.objects.filter(uuid=storyline_uuid)
+    
+    if storyline.exists():
+        storyline = storyline.first()
+
+        story_uuid = request.data.get("story_uuid")
+        story = Story.objects.filter(uuid=story_uuid)
+        if story.exists():
+            story = story.first()
+            if story in storyline.stories.all():
+                storyline.stories.remove(story)
+        
+                return Response(status=status.HTTP_200_OK)
+    
+    return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 ### Guards ###
 

@@ -24,6 +24,7 @@ urlpatterns = [
     path("admin/add-storyline/", views.add_storyline, name="add-storyline"),
     path("admin/add-to-storyline/", views.add_to_storyline, name="add-to-storyline"),
     path("admin/rmv-storyline/", views.rmv_storyline, name="rmv-storyline"),
+    path("admin/rmv-from-storyline/", views.rmv_from_storyline, name="rmv-from-storyline"),
 
     path("is-admin/", views.is_admin, name="is-admin"),
 ]

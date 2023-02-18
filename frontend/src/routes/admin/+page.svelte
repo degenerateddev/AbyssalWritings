@@ -1,6 +1,6 @@
 <script lang="ts">
     import ManageEntry from "admin-comps/ManageEntry.svelte";
-    import StorylineEntry from "admin-comps/StorylineEntry.svelte";
+    import Storyline from "admin-comps/Storyline.svelte";
 
     export let data: any;
 </script>
@@ -11,7 +11,7 @@
     </div>
     <div class="grid grid-cols-[auto_auto_auto]">
         {#each data.storylines as storyline}
-            <StorylineEntry storyline={storyline}></StorylineEntry>
+            <Storyline storyline={storyline}></Storyline>
         {/each}
     </div>
 
