@@ -4,9 +4,11 @@ import { json } from '@sveltejs/kit';
  
 export const PUT = (async ({ cookies, request }) => {
     let data = await request.formData();
-    const title = data.get("title");
-    const content = data.get("content");
-    const uuid = data.get("uuid");
+    const body = Object.fromEntries(data);
+    const formatted = JSON.parse(Object.keys(body)[0])
+    const uuid = formatted.uuid;
+    const title = formatted.title;
+    const content = formatted.content;
 
     const cookie: string | undefined = cookies.get("tokens" || undefined)
     const tokens: Tokens = JSON.parse(cookie || "")
@@ -35,8 +37,8 @@ export const PUT = (async ({ cookies, request }) => {
         })
     }
 
-    return {
+    return json({
         status: 500
-    }
+    })
 
 }) satisfies RequestHandler;

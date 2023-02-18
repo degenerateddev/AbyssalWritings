@@ -258,7 +258,7 @@
             const response = await fetch("/admin/actions/edit", {    // if editing
                 method: "PUT",
                 headers: new Headers({
-                    "Content-Type": "application/json",
+                    "Content-Type": "application/x-www-form-urlencoded",
                     "Accept": "application/json"
                 }),
                 body: JSON.stringify({
