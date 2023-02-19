@@ -1,9 +1,9 @@
 <script lang="ts">
-    import type { StoryPreview } from "../lib/types";
+    import type { Story } from "$lib/types";
     import Icon from "@iconify/svelte";
     import AdminAvatar from "./AdminAvatar.svelte";
 
-    export let story: StoryPreview;
+    export let story: Story;
 </script>
 
 <a class="card card-hover bg-primary-backdrop-token variant-ghost-surface overflow-hidden md:max-w-[25vw]" href="/stories/story-{story.uuid}/">

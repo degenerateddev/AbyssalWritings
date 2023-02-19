@@ -85,7 +85,11 @@
             element: element,
             extensions: [
                 CustomDocument,
-                Paragraph,
+                Paragraph.configure({
+                    HTMLAttributes: {
+                        class: "text-2xl"
+                    }
+                }),
                 Code,
                 Italic,
                 Typography,
@@ -133,7 +137,7 @@
             content: `
                 <h1>${title}</h1>
                 <p>
-                    ${content}
+                    <span style='font-size: 30px;'>${content}</span>
                 </p>
             `,
             editorProps: {
@@ -407,16 +411,26 @@
             <a href="#">Wörter: {words}</a>
         </ul>
         {#if storyline !== undefined && uuid !== ""}
-            <span>{storyline.title}</span>
-            <Stepper>
+        <div class="container py-10 space-y-10">
+            <span class="text-5xl font-bold">{storyline.title}</span>
+            <Stepper buttonComplete="variant-ghost-primary" buttonCompleteLabel="Edit" on:next={() => console.log("COMPLETE")}>
                 {#each storyline.stories as story}
                     {#if story.uuid === uuid}
-                        <Step><span class="text-5xl">{story.title}</span></Step>
+                        <Step locked={true}>
+                            <svelte:fragment slot="header">
+                                <span class="text-3xl">{story.title}</span>
+                            </svelte:fragment>
+                        </Step>
                     {:else}
-                        <Step>{story.title}</Step>
+                        <Step>
+                            <svelte:fragment slot="header">
+                                <span class="text-2xl">{story.title}</span>
+                            </svelte:fragment>
+                        </Step>
                     {/if}
                 {/each}
             </Stepper>
+        </div>
         {/if}
         {#if uuid}
             <FileButton multiple={false} button="variant-filled-primary rounded-full m-5" name="files" bind:files on:change={img_upload}>Image Upload</FileButton>

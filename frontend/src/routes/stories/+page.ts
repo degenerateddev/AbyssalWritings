@@ -1,5 +1,5 @@
 import type { PageLoad } from './$types';
-import type Genre from "$lib/types";
+import type { Story } from "$lib/types";
  
 export const load = (async ({ params }) => {
 
@@ -11,7 +11,7 @@ export const load = (async ({ params }) => {
     });
 
     if (response.ok) {
-        const stories: Object = await response.json();
+        const stories: Array<Story> = await response.json();
 
         return {
             stories,
