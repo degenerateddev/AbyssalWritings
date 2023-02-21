@@ -25,9 +25,8 @@ export const PUT: RequestHandler = (async ({ cookies, request }) => {
     })
 
     if (response.ok) {
-        const story = await response.json()
         return json({
-            story
+            status: 200
         })
     }
 

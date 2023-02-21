@@ -10,8 +10,8 @@
     let show: boolean = true;
 
     async function toggle() {
-        const uuid: string = "";
-        const response = await fetch("http://127.0.0.1:8000/admin/toggle-story", {
+        const uuid: string = story.uuid;
+        const response = await fetch("/admin/actions/toggle-story", {
             method: "PUT",
             headers: new Headers({
                 "Content-Type": "application/x-www-form-urlencoded"
