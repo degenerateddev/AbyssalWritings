@@ -19,7 +19,7 @@ urlpatterns = [
     path("admin/edit-story/", views.edit_story, name="edit-story"),
     path("admin/rmv-story/", views.rmv_story, name="rmv-story"),
     path("admin/toggle-story/", views.toggle_story, name="toggle-story"),
-
+    path("admin/add-to-genre/", views.add_to_genre, name="add-to-genre"),
     path("admin/get-available-storylines/", views.get_available_storylines, name="get-available-storylines"),
     path("admin/get-storyline/<uuid:uuid>/", views.get_storyline, name="get-storyline"),
     path("admin/add-storyline/", views.add_storyline, name="add-storyline"),

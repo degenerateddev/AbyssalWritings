@@ -41,7 +41,8 @@ export type Story = {
     hearts: number;
 }
 
-type Genre = {
+export type Genre = {
+    uuid: string;
     name: string;
     description: string;
     banner: string;

@@ -6,20 +6,17 @@ class GenreSerializer(ModelSerializer):
     class Meta:
         model = Genre
         fields = ("__all__")
-
-class StorySerializer(ModelSerializer):
+    
+class StoryUploadSerializer(ModelSerializer):
     title = serializers.CharField()
     content = serializers.CharField()
-    date = serializers.DateField(required=False)
-    hearts = serializers.IntegerField(required=False)
     image = serializers.ImageField(required=False)
-    genre = GenreSerializer(required=False)
+    genre = serializers.CharField(required=False)
 
     class Meta:
         model = Story
-        fields = ("__all__")
-        depth = 2
-
+        fields = ("title", "content", "image", "genre")
+    
     def validate(self, unvalidated_data):
         print("Add Test")
         return unvalidated_data
@@ -45,10 +42,23 @@ class StorySerializer(ModelSerializer):
         if genre != None:
             genre = Genre.objects.filter(uuid=genre)
             if genre.exists():
-                story.genre = genre
+                story.genre = genre.first()
                 story.save()
 
         return story
+
+class StorySerializer(ModelSerializer):
+    title = serializers.CharField()
+    content = serializers.CharField()
+    date = serializers.DateField(required=False)
+    hearts = serializers.IntegerField(required=False)
+    image = serializers.ImageField(required=False)
+    genre = GenreSerializer(required=False)
+
+    class Meta:
+        model = Story
+        fields = ("__all__")
+        depth = 2
 
 class StoryLineSerializer(ModelSerializer):
     uuid = serializers.UUIDField()

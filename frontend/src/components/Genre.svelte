@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type Genre from "$lib/types";
+    import type { Genre } from "$lib/types";
 
     export let genre: Genre;
     export let left: boolean = true;

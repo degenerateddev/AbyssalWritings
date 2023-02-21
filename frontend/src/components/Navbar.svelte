@@ -1,5 +1,6 @@
 <script lang="ts">
-    import { AppBar, LightSwitch } from '@skeletonlabs/skeleton';
+    import Icon from '@iconify/svelte';
+import { AppBar, LightSwitch } from '@skeletonlabs/skeleton';
     import Anchor from './Anchor.svelte';
 </script>
 
@@ -12,9 +13,15 @@
     <svelte:fragment slot="trail">
         <LightSwitch></LightSwitch>
         <div class="btn-group-vertical md:btn-group variant-ghost-primary [&>*+*]:border-surface-900">
-            <Anchor to="/stories" text="Kurzgeschichten"></Anchor>
-            <Anchor to="/genres" text="Genres"></Anchor>
-            <Anchor to="/project" text="Buch Projekt"></Anchor>
+            <Anchor to="/stories">
+                <Icon icon="ph:pen-nib"></Icon>
+            </Anchor>
+            <Anchor to="/genres">
+                <Icon icon="dashicons:screenoptions"></Icon>
+            </Anchor>
+            <Anchor to="/project">
+                <Icon icon="material-symbols:menu-book"></Icon>
+            </Anchor>
         </div>
     </svelte:fragment>
 </AppBar>

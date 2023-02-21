@@ -2,20 +2,18 @@ import type { RequestHandler } from './$types';
 import type { Tokens } from "$lib/types";
 import { json } from '@sveltejs/kit';
  
-export const PUT = (async ({ cookies, request }) => {
-    let data = await request.formData();
+export const PUT: RequestHandler = (async ({ cookies, request }) => {
+    const data = await request.formData();
     const body = Object.fromEntries(data);
     const formatted = JSON.parse(Object.keys(body)[0])
     const uuid = formatted.uuid;
-    const title = formatted.title;
-    const content = formatted.content;
     const genre = formatted.genre;
 
-    const cookie: string | undefined = cookies.get("tokens" || undefined)
-    const tokens: Tokens = JSON.parse(cookie || "")
-    const access: string = tokens.access
+    const cookie: string | undefined = cookies.get("tokens");
+    const tokens: Tokens = JSON.parse(cookie || "");
+    const access: string = tokens.access;
 
-    const response = await fetch("http://127.0.0.1:8000/api/admin/edit-story/", {
+    const response = await fetch("http://127.0.0.1:8000/api/admin/add-to-genre/", {
         method: "PUT",
         headers: new Headers({
             "Content-Type": "application/json",
@@ -24,23 +22,18 @@ export const PUT = (async ({ cookies, request }) => {
         }),
         body: JSON.stringify({
             uuid: uuid,
-            title: title,
-            content: content,
             genre: genre
         })
     })
 
     if (response.ok) {
-        const data = await response.json();
         return json({
-            uuid: uuid,
-            title: data.title,
-            content: data.content
+            status: 200
         })
     }
 
     return json({
-        status: 500
+        status: 400
     })
 
 }) satisfies RequestHandler;

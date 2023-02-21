@@ -4,7 +4,6 @@
     import { SlideToggle } from '@skeletonlabs/skeleton';
     import { enhance } from '$app/forms';
     import { fade } from 'svelte/transition';
-	import { redirect } from "@sveltejs/kit";
 
     export let story: Story;
 
@@ -12,11 +11,10 @@
 
     async function toggle() {
         const uuid: string = "";
-        const response = await fetch("http://127.0.0.1:8000/admin/toggle-story/", {
+        const response = await fetch("http://127.0.0.1:8000/admin/toggle-story", {
             method: "PUT",
             headers: new Headers({
-                "Content-Type": "application/json",
-                "Authorization": "Bearer " //+ tokens.access
+                "Content-Type": "application/x-www-form-urlencoded"
             }),
             body: JSON.stringify({
                 "uuid": uuid

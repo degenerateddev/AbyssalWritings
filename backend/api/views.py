@@ -6,7 +6,7 @@ from rest_framework import status
 
 import random
 
-from .serializers import StorySerializer, StoryLineSerializer, GenreSerializer
+from .serializers import StorySerializer, StoryLineSerializer, GenreSerializer, StoryUploadSerializer
 from .models import Story, StoryLine, Genre
 
 # Create your views here.
@@ -147,12 +147,15 @@ def get_available_storylines(request):
 @permission_classes([IsAdminUser])
 def add_story(request):
     print(request.data)
-    serializer = StorySerializer(data=request.data, context={"request": request})
-    if serializer.is_valid(raise_exception=True):
+    serializer = StoryUploadSerializer(data=request.data, context={"request": request})
+    if serializer.is_valid():
         story = serializer.save()
         
         serialized = StorySerializer(story)
         return Response(serialized.data)
+    
+    print(serializer.errors)
+    return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @api_view(["PUT"])
 @permission_classes([IsAdminUser])
@@ -206,10 +209,32 @@ def edit_story(request):
 def toggle_story(request):
     uuid = request.data.get("uuid")
     story = Story.objects.filter(uuid=uuid)
+
     if story.exists():
         story = story.first()
         story.active = not story.active
         story.save()
+
+        return Response(status=status.HTTP_200_OK)
+
+@api_view(["PUT"])
+@permission_classes([IsAdminUser])
+def add_to_genre(request):
+    uuid = request.data.get("uuid")
+    story = Story.objects.filter(uuid=uuid)
+
+    if story.exists():
+        story = story.first()
+        uuid = request.data.get("genre")
+        genre = Genre.objects.filter(uuid=uuid)
+        if genre.exists():
+            genre = genre.first()
+            story.genre = genre
+            story.save()
+
+            return Response(status=status.HTTP_200_OK)
+    
+    return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 ### Storylines ###
 

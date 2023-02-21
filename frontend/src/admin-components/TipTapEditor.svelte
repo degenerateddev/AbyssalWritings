@@ -1,11 +1,12 @@
 <script lang="ts">
-    import type { StoryLine } from "$lib/types";
+    import type { Story, StoryLine, Genre } from "$lib/types";
     import { onMount, onDestroy } from 'svelte';
     import Icon from '@iconify/svelte';
     import { Stepper, Step, type ModalSettings, type ModalComponent } from '@skeletonlabs/skeleton';
     import { toastStore, type ToastSettings } from '@skeletonlabs/skeleton';
     import { FileButton } from "@skeletonlabs/skeleton";
     import { modalStore } from '@skeletonlabs/skeleton';
+    import { menu } from "@skeletonlabs/skeleton";
     import { Editor } from '@tiptap/core';
     import StarterKit from '@tiptap/starter-kit';
     import Document from '@tiptap/extension-document'
@@ -21,6 +22,7 @@
     import Typography from '@tiptap/extension-typography'
     import Placeholder from '@tiptap/extension-placeholder'
     import HardBreak from '@tiptap/extension-hard-break'
+	import { json } from "@sveltejs/kit";
   
     let element : HTMLDivElement;
     var editor : any;
@@ -30,16 +32,26 @@
 
     var storyline: StoryLine;
 
-    export let title: string = "";
-    export let content: string = ``;
-    export let uuid: string = "";
+    export let story: Story;
     export let editing: boolean = false;
+    let uuid: string = "";
+    let title: string = "";
+    let content: string = ``;
+    if (story !== undefined) {
+        uuid = story.uuid;
+        title = story.title;
+        content = story.content;
+    }
 
     let files : FileList;
     let img_uploaded : boolean = false;
 
     var no_storyline: boolean = false;
     var available_storylines: Array<StoryLine>;
+    
+    var genre_response: Response; //Promise<Array<Genre>>
+    var genres: Array<Genre>;
+    var selected_genre: string;
 
     let CustomDocument = Document.extend({
         content: "heading block*",
@@ -79,6 +91,18 @@
                 const data = await response.json();
                 available_storylines = data.storylines;
             }
+        }
+
+        genre_response = await fetch("http://127.0.0.1:8000/api/genres/?format=json", {
+            method: "GET",
+            headers: new Headers({
+                "Content-Type": "application/json"
+            })
+        })
+
+        if (genre_response.ok) {
+            const data = await genre_response.json();
+            genres = data;
         }
 
         editor = new Editor({
@@ -224,12 +248,14 @@
                 }),
                 body: JSON.stringify({
                     title: title,
-                    content: content
+                    content: content,
+                    genre: selected_genre
                 })
             })
 
             if (response.ok) {
                 const data = await response.json();
+                console.log(JSON.stringify(data));
                 uuid = data.story.uuid;
 
                 const t: ToastSettings = {
@@ -251,7 +277,8 @@
                 body: JSON.stringify({
                     uuid: uuid,
                     title: title,
-                    content: content
+                    content: content,
+                    genre: selected_genre
                 })
             })
 
@@ -324,6 +351,34 @@
                 };
                 toastStore.trigger(t);
             }
+        }
+    }
+
+    async function selectGenre(genre: string) {
+        if (editing) {
+            const response = await fetch("/admin/actions/add-to-genre", {
+                method: "PUT",
+                headers: new Headers({
+                    "Content-Type": "application/x-www-form-urlencoded"
+                }),
+                body: JSON.stringify({
+                    genre: genre,
+                    uuid: uuid
+                })
+            });
+
+            if (response.ok) {
+                const t: ToastSettings = {
+                    message: 'Added to genre',
+                    // Optional: The auto-hide settings
+                    autohide: true,
+                    timeout: 3000,
+                    classes: 'bg-gradient-to-tr from-green-400 to-green-900 text-white',
+                };
+                toastStore.trigger(t);
+            }
+        } else {
+            selected_genre = genre;
         }
     }
 </script>
@@ -413,7 +468,7 @@
         {#if storyline !== undefined && uuid !== ""}
         <div class="container py-10 space-y-10">
             <span class="text-5xl font-bold">{storyline.title}</span>
-            <Stepper buttonComplete="variant-ghost-primary" buttonCompleteLabel="Edit" on:next={() => console.log("COMPLETE")}>
+            <Stepper>
                 {#each storyline.stories as story}
                     {#if story.uuid === uuid}
                         <Step locked={true}>
@@ -424,7 +479,9 @@
                     {:else}
                         <Step>
                             <svelte:fragment slot="header">
-                                <span class="text-2xl">{story.title}</span>
+                                <a href="#" on:click={() => window.location.replace("/admin/edit-" + story.uuid)}>
+                                    <span class="text-2xl">{story.title}</span>
+                                </a>
                             </svelte:fragment>
                         </Step>
                     {/if}
@@ -432,8 +489,23 @@
             </Stepper>
         </div>
         {/if}
+        {#if editing && story.genre !== null}
+            <div class="relative my-10">
+                <h3>{story.genre.name}</h3>
+            </div>
+        {/if}
+        <div class="flex my-10">
+            {#if genres !== undefined && genres.length > 0}
+                {#each genres as genre}
+                    <button on:click={() => selectGenre(genre.uuid)} use:menu={{ menu: "hint" }}>{genre.name}</button>
+                    <div data-menu="hint" class="bg-primary-800/80 p-5">
+                        {genre.description}
+                    </div>
+                {/each}
+            {/if}
+        </div>
         {#if uuid}
-            <FileButton multiple={false} button="variant-filled-primary rounded-full m-5" name="files" bind:files on:change={img_upload}>Image Upload</FileButton>
+            <FileButton multiple={false} button="variant-filled-primary rounded-full my-10" name="files" bind:files on:change={img_upload}>Image Upload</FileButton>
         {/if}
         {#if files !== undefined}
             <span>{files.item(0).name}</span>
