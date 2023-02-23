@@ -37,6 +37,7 @@ export type Story = {
     genre: Genre;
 
     active: boolean;
+    liked: boolean;
 
     hearts: number;
 }

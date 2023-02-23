@@ -2,18 +2,18 @@
     import type { Story } from "$lib/types";
     import Banner from "comps/Banner.svelte";
     import Icon from "@iconify/svelte";
+	import { redirect } from "@sveltejs/kit";
 
     export let data;
 
-    export let liked: boolean = false;
-
     let story: Story = data.story;
+    let liked: boolean = story.liked;
 
     async function like() {
-        const response = await fetch("http://127.0.0.1:8000/api/like/", {
+        const response = await fetch("/actions/like", {
             method: "PUT",
             headers: new Headers({
-                "Content-Type": "application/json",
+                "Content-Type": "application/x-www-form-urlencoded",
             }),
             body: JSON.stringify({
                 "uuid": story.uuid
@@ -21,15 +21,19 @@
         });
 
         if (response.ok) {
+            const data = await response.json();
+            if (data.error !== undefined || data.status === 400) {
+                window.location.replace("/login/")
+            }
             liked = true;
         }
     }
 
     async function unlike() {
-        const response = await fetch("http://127.0.0.1:8000/api/unlike/", {
+        const response = await fetch("/actions/unlike", {
             method: "PUT",
             headers: new Headers({
-                "Content-Type": "application/json",
+                "Content-Type": "application/x-www-form-urlencoded",
             }),
             body: JSON.stringify({
                 "uuid": story.uuid
@@ -37,6 +41,10 @@
         });
 
         if (response.ok) {
+            const data = await response.json();
+            if (data.error !== undefined) {
+                window.location.replace("/login/")
+            }
             liked = false;
         }
     }

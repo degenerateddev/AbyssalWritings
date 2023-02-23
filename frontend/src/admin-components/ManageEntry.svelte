@@ -31,6 +31,9 @@
     <div class="container p-5">
         <img src="http://127.0.0.1:8000{story.image}" class="object-contain max-h-72" alt="img" />
     </div>
+    <div class="container p-5">
+        <button class="btn variant-ringed-primary rounded-full" disabled>{story.genre.name}</button>
+    </div>
     <div class="card-footer flex items-center mt-5 space-x-5">
         <form method="POST" action="admin/actions/rmv-story" use:enhance on:submit={() => show = false}>
             <input type="hidden" value="{story.uuid}" name="uuid" />

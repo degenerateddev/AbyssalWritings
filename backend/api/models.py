@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from django.contrib.auth import get_user_model
 import uuid
 
 # Create your models here.
@@ -10,6 +11,7 @@ class Story(models.Model):
     image = models.ImageField(upload_to="images/", null=True)
     date = models.DateField(default=timezone.datetime.now().date())
     hearts = models.IntegerField(default=0)
+    liked_by = models.ManyToManyField(get_user_model(), blank=True)
     genre = models.ForeignKey("Genre", on_delete=models.SET_NULL, null=True)
     active = models.BooleanField(default=True)
 

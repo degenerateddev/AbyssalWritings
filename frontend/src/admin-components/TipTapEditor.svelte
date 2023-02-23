@@ -266,6 +266,8 @@
                     classes: 'bg-gradient-to-tr from-green-400 to-green-900 text-white',
                 };
                 toastStore.trigger(t);
+
+                window.location.replace("/admin/edit-" + uuid)
             }
         } else {
             const response = await fetch("/admin/actions/edit", {    // if editing
@@ -494,12 +496,14 @@
                 <h3>{story.genre.name}</h3>
             </div>
         {/if}
-        <div class="flex my-10">
+        <div class="flex my-10 gap-10">
             {#if genres !== undefined && genres.length > 0}
                 {#each genres as genre}
-                    <button on:click={() => selectGenre(genre.uuid)} use:menu={{ menu: "hint" }}>{genre.name}</button>
-                    <div data-menu="hint" class="bg-primary-800/80 p-5">
-                        {genre.description}
+                    <div class="relative">
+                        <button on:click={() => selectGenre(genre.uuid)} use:menu={{ menu: "hint-" + genre.uuid }}>{genre.name}</button>
+                        <div data-menu="hint-{genre.uuid}" class="bg-primary-800/80 p-5">
+                            {genre.description}
+                        </div>
                     </div>
                 {/each}
             {/if}

@@ -1,6 +1,9 @@
 from rest_framework.serializers import ModelSerializer, Serializer
 from rest_framework import serializers
+from django.contrib.auth import get_user_model
+
 from .models import Story, StoryLine, Genre
+from .utils import get_user
 
 class GenreSerializer(ModelSerializer):
     class Meta:
@@ -50,15 +53,25 @@ class StoryUploadSerializer(ModelSerializer):
 class StorySerializer(ModelSerializer):
     title = serializers.CharField()
     content = serializers.CharField()
-    date = serializers.DateField(required=False)
-    hearts = serializers.IntegerField(required=False)
-    image = serializers.ImageField(required=False)
-    genre = GenreSerializer(required=False)
+    date = serializers.DateField()
+    hearts = serializers.IntegerField()
+    liked = serializers.SerializerMethodField()
+    image = serializers.ImageField()
+    genre = GenreSerializer()
 
     class Meta:
         model = Story
         fields = ("__all__")
         depth = 2
+    
+    def get_liked(self, obj):
+        user = get_user(self.context["request"])
+
+        if user != None:
+            if user in obj.liked_by.all():
+                return True
+
+        return False
 
 class StoryLineSerializer(ModelSerializer):
     uuid = serializers.UUIDField()

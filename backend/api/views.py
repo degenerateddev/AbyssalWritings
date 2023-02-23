@@ -8,6 +8,7 @@ import random
 
 from .serializers import StorySerializer, StoryLineSerializer, GenreSerializer, StoryUploadSerializer
 from .models import Story, StoryLine, Genre
+from .utils import get_user
 
 # Create your views here.
 @api_view(["GET"])
@@ -64,7 +65,7 @@ def story(request, uuid):
     story = Story.objects.filter(uuid=uuid)
 
     if story.exists():
-        serialized = StorySerializer(story.first())
+        serialized = StorySerializer(story.first(), context={'request': request})
         return Response(serialized.data)
 
 @api_view(["GET"])
@@ -80,26 +81,34 @@ def storyline(request, uuid):
 def like(request):
     uuid = request.data.get("uuid")
     story = Story.objects.filter(uuid=uuid)
+    user = get_user(request)
 
-    if story.exists():
+    if story.exists() and user != None and user not in story.first().liked_by.all():
         story = story.first()
         story.hearts += 1
+        story.liked_by.add(user)
         story.save()
 
-        return Response(status=200)
+        return Response(status=status.HTTP_200_OK)
+    
+    return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @api_view(["PUT"])
 @permission_classes([IsAuthenticated])
 def unlike(request):
     uuid = request.data.get("uuid")
     story = Story.objects.filter(uuid=uuid)
+    user = get_user(request)
 
-    if story.exists():
+    if story.exists() and user != None and user in story.first().liked_by.all():
         story = story.first()
         story.hearts -= 1
+        story.liked_by.remove(user)
         story.save()
 
-        return Response(status=200)
+        return Response(status=status.HTTP_200_OK)
+
+    return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
 ### ADMIN ###
 @api_view(["GET"])
