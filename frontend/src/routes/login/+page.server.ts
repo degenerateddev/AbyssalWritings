@@ -1,6 +1,7 @@
 import { fail, redirect } from '@sveltejs/kit';
 import type { Actions } from './$types';
 import { dev } from '$app/environment';
+import { PUBLIC_BACKEND_URL } from "$env/static/public";
  
 export const actions = {
   login: async ({ request, cookies }) => {
@@ -12,7 +13,7 @@ export const actions = {
         return fail(400, { username, missing: true });
     }
 
-    const response = await fetch("http://127.0.0.1:8000/auth/token/", {
+    const response = await fetch(PUBLIC_BACKEND_URL + "/auth/token/", {
         method: "POST",
         headers: {
             'Content-Type': 'application/json'

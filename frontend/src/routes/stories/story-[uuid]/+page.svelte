@@ -3,11 +3,18 @@
     import Banner from "comps/Banner.svelte";
     import Icon from "@iconify/svelte";
 	import { redirect } from "@sveltejs/kit";
+	import { onMount } from "svelte";
 
     export let data;
 
     let story: Story = data.story;
     let liked: boolean = story.liked;
+
+    var paragraphs: Array<String>;
+    
+    if (story.content && story.content.length > 0) {
+        paragraphs = story.content.split("\n");
+    }
 
     async function like() {
         const response = await fetch("/actions/like", {
@@ -56,10 +63,23 @@
     <Banner name={story.title} banner={story.image}></Banner>
     
     <div class="container relative">
-        <pre class="first-letter:text-6xl first-letter:font-bold first-line:float-left tracking-normal whitespace-normal" style="background-color: transparent;">
-            <span class="text-2xl font-sans font-light break-words">{story.content}</span>
-        </pre>
-        <div class="flex gap-10">
+        <!--<pre class=" first-letter:text-6xl first-letter:font-bold first-line:float-left tracking-normal whitespace-normal" style="background-color: transparent;">
+            <span class="text-2xl font-sans leading-relaxed font-light break-normal">{story.content}</span>
+        </pre>-->
+        <div class="space-y-10">
+            {#each paragraphs as paragraph, _}
+                {#if _ === 0}
+                    <p class="first-letter:text-6xl first-letter:font-bold tracking-normal">
+                        <span class="text-2xl leading-relaxed font-light break-normal">{paragraph}</span>
+                    </p>
+                {:else}
+                    <p class="tracking-normal">
+                        <span class="text-2xl leading-relaxed font-light break-normal">{paragraph}</span>
+                    </p>
+                {/if}
+            {/each}
+        </div>
+        <div class="flex gap-10 mt-10">
             <ul class="px-5 float-right list-option border-primary-500 border-2">
                 <li>{story.date}</li>
                 <li>&rsaquo;</li>

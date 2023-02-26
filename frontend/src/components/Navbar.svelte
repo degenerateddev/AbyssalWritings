@@ -1,6 +1,6 @@
 <script lang="ts">
     import Icon from '@iconify/svelte';
-import { AppBar, LightSwitch } from '@skeletonlabs/skeleton';
+    import { AppBar } from '@skeletonlabs/skeleton';
     import Anchor from './Anchor.svelte';
 </script>
 
@@ -11,7 +11,6 @@ import { AppBar, LightSwitch } from '@skeletonlabs/skeleton';
         </a>
     </svelte:fragment>
     <svelte:fragment slot="trail">
-        <LightSwitch></LightSwitch>
         <div class="btn-group-vertical md:btn-group variant-ghost-primary [&>*+*]:border-surface-900">
             <Anchor to="/stories">
                 <Icon icon="ph:pen-nib"></Icon>

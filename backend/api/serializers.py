@@ -6,9 +6,14 @@ from .models import Story, StoryLine, Genre
 from .utils import get_user
 
 class GenreSerializer(ModelSerializer):
+    uuid = serializers.CharField()
+    name = serializers.CharField()
+    description = serializers.CharField()
+    banner = serializers.ImageField()
+
     class Meta:
         model = Genre
-        fields = ("__all__")
+        fields = ("uuid", "name", "description", "banner")
     
 class StoryUploadSerializer(ModelSerializer):
     title = serializers.CharField()
@@ -65,11 +70,13 @@ class StorySerializer(ModelSerializer):
         depth = 2
     
     def get_liked(self, obj):
-        user = get_user(self.context["request"])
+        request = self.context.get("request")
+        if request != None:
+            user = get_user(request)
 
-        if user != None:
-            if user in obj.liked_by.all():
-                return True
+            if user != None:
+                if user in obj.liked_by.all():
+                    return True
 
         return False
 

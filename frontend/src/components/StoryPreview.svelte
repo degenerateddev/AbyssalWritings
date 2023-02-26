@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { PUBLIC_BACKEND_URL } from "$env/static/public";
     import type { Story } from "$lib/types";
     import Icon from "@iconify/svelte";
     import AdminAvatar from "./AdminAvatar.svelte";
@@ -8,7 +9,7 @@
 
 <a class="card card-hover bg-primary-backdrop-token variant-ghost-surface overflow-hidden md:max-w-[25vw]" href="/stories/story-{story.uuid}/">
     <header class="text-left">
-        <img class="bg-black/50 w-full object-cover aspect-[21/9] border-b-2 border-b-primary-500" src="http://127.0.0.1:8000{story.image}" alt="img">
+        <img class="bg-black/50 w-full object-cover aspect-[21/9] border-b-2 border-b-primary-500" src="{PUBLIC_BACKEND_URL}{story.image}" alt="img">
         <h3 class="m-5">{story.title}</h3>
     </header>
     

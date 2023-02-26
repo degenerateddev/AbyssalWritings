@@ -2,6 +2,7 @@ import type { LayoutServerLoad } from './$types';
 import type { Tokens } from "$lib/types";
 import { error, redirect } from '@sveltejs/kit';
 import { dev } from '$app/environment';
+import { PUBLIC_BACKEND_URL } from "$env/static/public";
  
 export const load: LayoutServerLoad = (async ({ cookies, url }) => {
     const cookie = cookies.get('tokens');
@@ -9,7 +10,7 @@ export const load: LayoutServerLoad = (async ({ cookies, url }) => {
     if (cookie !== undefined) {
         let tokens: Tokens = JSON.parse(cookie)
 
-        const response = await fetch("http://127.0.0.1:8000/api/is-admin/", {
+        const response = await fetch(PUBLIC_BACKEND_URL + "/api/is-admin/", {
             method: "GET",
             headers: new Headers({
                 "Content-Type": "application/json",
@@ -24,7 +25,7 @@ export const load: LayoutServerLoad = (async ({ cookies, url }) => {
                 status: 200
             };
         } else {
-            const response = await fetch("http://127.0.0.1:8000/auth/token/refresh/", {
+            const response = await fetch(PUBLIC_BACKEND_URL + "/auth/token/refresh/", {
                 method: "POST",
                 headers: new Headers({
                     "Content-Type": "application/json"

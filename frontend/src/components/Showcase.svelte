@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { PUBLIC_BACKEND_URL } from "$env/static/public";
     import type { StoryPreview } from "$lib/types";
     import { onMount } from "svelte";
     import Icon from "@iconify/svelte";
@@ -7,7 +8,7 @@
     let loaded: boolean = false;
 
     onMount(async () => {
-        const response = await fetch("http://127.0.0.1:8000/api/showcase/", {
+        const response = await fetch(PUBLIC_BACKEND_URL + "/api/showcase/", {
             method: "GET",
             headers: {
                 "Content-Type": "application/json"
@@ -35,7 +36,7 @@
         <div class="bg-surface-700 grid grid-cols-1 md:grid-cols-3">
             <div class="col-span-1">
                 <a href="/stories/story-{story.uuid}/">
-                    <img class="object-cover" src="http://127.0.0.1:8000{story.image}" alt="img" />
+                    <img class="object-cover" src="{PUBLIC_BACKEND_URL}{story.image}" alt="img" />
                 </a>
             </div>
             <div class="col-span-2 space-y-10 text-left p-5 relative">

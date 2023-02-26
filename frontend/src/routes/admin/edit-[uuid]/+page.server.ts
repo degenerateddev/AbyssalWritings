@@ -1,10 +1,9 @@
 import type { PageServerLoad, Actions } from './$types';
-import type { Tokens } from "$lib/types";
-import { json } from '@sveltejs/kit';
+import { PUBLIC_BACKEND_URL } from "$env/static/public";
 
 export const load = (async ({ params, request, cookies }) => {
     const uuid: string = params.uuid;
-    const response = await fetch("http://127.0.0.1:8000/api/story/" + uuid + "/", {
+    const response = await fetch(PUBLIC_BACKEND_URL + "/api/story/" + uuid + "/", {
         method: "GET",
         headers: new Headers({
             "Content-Type": "application/json"

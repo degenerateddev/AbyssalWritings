@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { PUBLIC_BACKEND_URL } from "$env/static/public";
     import type { Story, StoryLine, Genre } from "$lib/types";
     import { onMount, onDestroy } from 'svelte';
     import Icon from '@iconify/svelte';
@@ -93,7 +94,7 @@
             }
         }
 
-        genre_response = await fetch("http://127.0.0.1:8000/api/genres/?format=json", {
+        genre_response = await fetch(PUBLIC_BACKEND_URL + "/api/genres/?format=json", {
             method: "GET",
             headers: new Headers({
                 "Content-Type": "application/json"

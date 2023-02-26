@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { PUBLIC_BACKEND_URL } from "$env/static/public";
     import type { Story } from "$lib/types";
     import Icon, { replaceIDs } from "@iconify/svelte";
     import { SlideToggle } from '@skeletonlabs/skeleton';
@@ -29,7 +30,7 @@
         <h3>{story.title}</h3>
     </div>
     <div class="container p-5">
-        <img src="http://127.0.0.1:8000{story.image}" class="object-contain max-h-72" alt="img" />
+        <img src="{PUBLIC_BACKEND_URL}{story.image}" class="object-contain max-h-72" alt="img" />
     </div>
     <div class="container p-5">
         <button class="btn variant-ringed-primary rounded-full" disabled>{story.genre.name}</button>

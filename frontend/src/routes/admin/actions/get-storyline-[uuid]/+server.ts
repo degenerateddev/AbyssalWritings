@@ -1,6 +1,7 @@
 import type { RequestHandler } from './$types';
 import type { Tokens } from "$lib/types";
 import { json } from '@sveltejs/kit';
+import { PUBLIC_BACKEND_URL } from "$env/static/public";
  
 export const GET = (async ({ cookies, params }) => {
   const cookie: string | undefined = cookies.get("tokens");
@@ -8,7 +9,7 @@ export const GET = (async ({ cookies, params }) => {
   const access: string = tokens.access;
   const uuid: string = params.uuid;
 
-  const response = await fetch("http://127.0.0.1:8000/api/admin/get-storyline/" + uuid + "/", {
+  const response = await fetch(PUBLIC_BACKEND_URL + "/api/admin/get-storyline/" + uuid + "/", {
       method: "GET",
       headers: new Headers({
         "Content-Type": "application/json",

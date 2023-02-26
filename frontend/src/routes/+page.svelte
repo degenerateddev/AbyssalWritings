@@ -2,10 +2,10 @@
 	import Showcase from "comps/Showcase.svelte";
 	import StoryPreview from "comps/StoryPreview.svelte";
 	import HeroSection from "comps/HeroSection.svelte";
-	import Genre from "comps/Genre.svelte";
-	import type { StoryPreview, Genre } from "$lib/types";
+	import GenreComp from "comps/Genre.svelte";
+	import type { Story, Genre } from "$lib/types";
 
-	export let data: Object;
+	export let data;
 
 	let newest: Array<Story> = data.newest;
 	let fav: Array<Genre> = data.fav;
@@ -29,9 +29,9 @@
 		<HeroSection horizontal={false} title="Lieblings Genres" description="Hier befinden sich meine Lieblinge im Bereich Schreiben.">
 			{#each fav as genre, index}
 				{#if index % 2 != 0}
-				<Genre left={true} genre={genre}></Genre>
+					<GenreComp left={true} genre={genre}></GenreComp>
 				{:else}
-				<Genre left={false} genre={genre}></Genre>
+					<GenreComp left={false} genre={genre}></GenreComp>
 				{/if}
 			{/each}
 		</HeroSection>

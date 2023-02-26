@@ -1,9 +1,10 @@
 import type { PageLoad } from './$types';
 import type { Story } from "$lib/types";
- 
-export const load = (async ({ params }) => {
+import { PUBLIC_BACKEND_URL } from "$env/static/public"; 
 
-    const response = await fetch("http://127.0.0.1:8000/api/stories/", {
+export const load = (async (event) => {
+
+    const response = await fetch(PUBLIC_BACKEND_URL + "/api/stories/", {
         method: "GET",
         headers: {
             "Content-Type": "application/json"

@@ -1,8 +1,9 @@
 import type { PageLoad } from './$types';
+import { PUBLIC_BACKEND_URL } from "$env/static/public";
  
 export const load = (async ({ params }) => {
 
-    const response = await fetch("http://127.0.0.1:8000/api/", {
+    const response = await fetch(PUBLIC_BACKEND_URL + "/api/", {
         method: "GET",
         headers: {
             "Content-Type": "application/json"
@@ -10,7 +11,7 @@ export const load = (async ({ params }) => {
     });
 
     if (response.ok) {
-        const data: Object = await response.json();
+        const data = await response.json();
         const newest: Object = data.newest;
         const fav: Object = data.fav
 

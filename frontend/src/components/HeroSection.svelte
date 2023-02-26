@@ -13,12 +13,12 @@
         <span class="text-base">{description}</span>
     </div>
     {#if horizontal}
-    <div class="grid grid-cols-1 md:grid-cols-[auto_1fr_auto] gap-20">
-        <slot />
-    </div>
+        <div class="grid grid-cols-1 md:grid-cols-[auto_1fr_auto] gap-20">
+            <slot />
+        </div>
     {:else}
-    <div class="grid grid-cols-1 gap-y-20">
-        <slot />
-    </div>
+        <div class="grid grid-cols-1 gap-y-20">
+            <slot />
+        </div>
     {/if}
 </div>

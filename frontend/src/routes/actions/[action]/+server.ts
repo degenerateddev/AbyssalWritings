@@ -1,6 +1,7 @@
 import type { RequestHandler } from './$types';
 import type { Tokens } from "$lib/types";
 import { json } from '@sveltejs/kit';
+import { PUBLIC_BACKEND_URL } from "$env/static/public";
  
 export const PUT: RequestHandler = (async ({ cookies, request, params }) => {
     const data = await request.formData();
@@ -24,11 +25,11 @@ export const PUT: RequestHandler = (async ({ cookies, request, params }) => {
 
     switch (action) {
         case "like":
-            url = "http://127.0.0.1:8000/api/like/";
+            url = PUBLIC_BACKEND_URL + "/api/like/";
             break;
 
         case "unlike":
-            url = "http://127.0.0.1:8000/api/unlike/"
+            url = PUBLIC_BACKEND_URL + "/api/unlike/";
             break;
 
         default:
