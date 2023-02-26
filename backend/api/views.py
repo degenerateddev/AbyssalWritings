@@ -1,16 +1,29 @@
 from django.shortcuts import render
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
-from rest_framework.views import Response
+from rest_framework.views import Response, APIView
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework import status
+from rest_framework_simplejwt.tokens import RefreshToken
 
 import random
 
-from .serializers import StorySerializer, StoryLineSerializer, GenreSerializer, StoryUploadSerializer
+from .serializers import StorySerializer, StoryLineSerializer, GenreSerializer, StoryUploadSerializer, RegisterSerializer
 from .models import Story, StoryLine, Genre
 from .utils import get_user
 
-# Create your views here.
+class TokenRegister(APIView):
+    def post(self, request):
+        serializer = RegisterSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
+
+        refresh = RefreshToken.for_user(user)
+
+        return Response({
+            "refresh": str(refresh),
+            "access": str(refresh.access_token)
+        })
+
 @api_view(["GET"])
 def index(request):
     newest = Story.objects.filter(active=True).order_by("-date")[:3]

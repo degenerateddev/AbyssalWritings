@@ -22,12 +22,14 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
     TokenVerifyView
 )
+from api.views import TokenRegister
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("api/", include("api.urls")),
 
     path('auth/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('auth/token/register/', TokenRegister.as_view(), name='token_register'),
     path('auth/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('auth/token/verify/', TokenVerifyView.as_view(), name='token_verify'), # necessary?
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

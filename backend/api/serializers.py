@@ -1,9 +1,23 @@
 from rest_framework.serializers import ModelSerializer, Serializer
 from rest_framework import serializers
-from django.contrib.auth import get_user_model
+from django.contrib.auth.models import User
 
 from .models import Story, StoryLine, Genre
 from .utils import get_user
+
+class RegisterSerializer(ModelSerializer):
+    class Meta:
+        model = User
+        fields = ("username", "email", "password")
+    
+    def create(self, validated_data):
+        username = validated_data.get("username")
+        email = validated_data.get("email")
+        password = validated_data.get("password")
+
+        user = User.objects.create_user(username=username, email=email, password=password)
+
+        return user
 
 class GenreSerializer(ModelSerializer):
     uuid = serializers.CharField()
