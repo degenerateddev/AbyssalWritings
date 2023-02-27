@@ -13,6 +13,8 @@ urlpatterns = [
     path("like/", views.like, name="like"),
     path("unlike/", views.unlike, name="unlike"),
 
+    path("user-data/", views.userData, name="user-data"),
+
     path("admin/overview/", views.story_overview, name="overview"),
     path("admin/add-story/", views.add_story, name="add-story"),
     path("admin/add-image/", views.add_image, name="add-image"),
@@ -28,4 +30,5 @@ urlpatterns = [
     path("admin/rmv-from-storyline/", views.rmv_from_storyline, name="rmv-from-storyline"),
 
     path("is-admin/", views.is_admin, name="is-admin"),
+    path("is-logged-in/", views.is_logged_in, name="is-logged-in"),
 ]

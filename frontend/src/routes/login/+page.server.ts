@@ -2,6 +2,8 @@ import { fail, redirect } from '@sveltejs/kit';
 import type { Actions } from './$types';
 import { dev } from '$app/environment';
 import { PUBLIC_BACKEND_URL } from "$env/static/public";
+import { userStore } from "$lib/stores";
+import type { User } from "$lib/types";
  
 export const actions = {
     login: async ({ request, cookies }) => {
@@ -26,7 +28,6 @@ export const actions = {
 
         if (response.ok) {
             const data = await response.json();
-            console.log(data);
             cookies.delete("tokens");
             cookies.set("tokens", JSON.stringify(data), {
                 path: "/",
@@ -34,7 +35,7 @@ export const actions = {
                 sameSite: 'strict',
                 secure: !dev
             });
-            throw redirect(303, "/admin");
+            throw redirect(303, "/profile");
         }
     },
 
@@ -83,7 +84,7 @@ export const actions = {
                 sameSite: 'strict',
                 secure: !dev
             });
-            throw redirect(303, "/");
+            throw redirect(303, "/profile");
         }
     }
 } satisfies Actions;

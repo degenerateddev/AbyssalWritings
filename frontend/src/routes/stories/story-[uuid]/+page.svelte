@@ -2,18 +2,19 @@
     import type { Story } from "$lib/types";
     import Banner from "comps/Banner.svelte";
     import Icon from "@iconify/svelte";
-	import { redirect } from "@sveltejs/kit";
-	import { onMount } from "svelte";
+	import type { PageData } from "./$types";
 
-    export let data;
+    export let data: PageData;
 
     let story: Story = data.story;
-    let liked: boolean = story.liked;
+    let liked: boolean = data.liked;
 
     var paragraphs: Array<String>;
     
-    if (story.content && story.content.length > 0) {
-        paragraphs = story.content.split("\n");
+    if (story !== undefined) {
+        if (story.content && story.content.length > 0) {
+            paragraphs = story.content.split("\n");
+        }
     }
 
     async function like() {
@@ -33,6 +34,7 @@
                 window.location.replace("/login/")
             }
             liked = true;
+            story.hearts += 1;
         }
     }
 
@@ -53,6 +55,7 @@
                 window.location.replace("/login/")
             }
             liked = false;
+            story.hearts -= 1;
         }
     }
 
@@ -60,6 +63,7 @@
 </script>
 
 <div class="container mx-auto space-y-10">
+    {#if story}
     <Banner name={story.title} banner={story.image}></Banner>
     
     <div class="container relative">
@@ -91,12 +95,12 @@
                 </li>
             </ul>
             <div class="space-x-10 ml-auto">
-                {#if liked}
-                    <button class="text-4xl" on:click={unlike}>
+                {#if liked === true}
+                    <button class="text-4xl hover:scale-105 duration-200 text-rose-800 hover:text-white" on:click={unlike}>
                         <Icon icon="mdi:cards-heart"></Icon>
                     </button>
                 {:else}
-                    <button class="text-4xl text-rose-800 hover:text-rose-600 hover:scale-105 duration-200" on:click={like}>
+                    <button class="text-4xl hover:scale-105 duration-200 text-white hover:text-rose-800" on:click={like}>
                         <Icon icon="mdi:cards-heart"></Icon>
                     </button>
                 {/if}
@@ -106,4 +110,9 @@
             </div>
         </div>
     </div>
+    {:else}
+    <div class="flex justify-center">
+        <h1>Error while fetching story</h1>
+    </div>
+    {/if}
 </div>

@@ -5,7 +5,7 @@
     export let horizontal: boolean = true;
 </script>
 
-<div class="container mx-auto space-y-10 bg-surface-900 py-10 px-5">
+<div class="container mx-auto space-y-10 bg-surface-800 py-10 px-5 rounded-2xl">
     <div class="flex justify-center">
         <h1 class="font-extrabold tracking-tight">{title}</h1>
     </div>

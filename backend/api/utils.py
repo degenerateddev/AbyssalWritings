@@ -9,7 +9,6 @@ def get_user(request):
     if token != None and token != "":
         #data = TokenBackend(algorithm='HS256').decode(token, verify=True)
         data = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
-        print(data)
         user_id = data['user_id']
         user = get_user_model().objects.filter(pk=user_id)
 

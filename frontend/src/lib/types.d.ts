@@ -8,7 +8,7 @@ type StoryPreview = {
     hearts: number;
 };
 
-type User = {
+export type User = {
     loggedIn: boolean;
     username: string;
     avatar: string;

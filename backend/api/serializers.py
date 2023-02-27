@@ -5,6 +5,11 @@ from django.contrib.auth.models import User
 from .models import Story, StoryLine, Genre
 from .utils import get_user
 
+class UserSerializer(ModelSerializer):
+    class Meta:
+        model = User
+        fields = ("username", "email",)
+
 class RegisterSerializer(ModelSerializer):
     class Meta:
         model = User
@@ -70,17 +75,17 @@ class StoryUploadSerializer(ModelSerializer):
         return story
 
 class StorySerializer(ModelSerializer):
+    uuid = serializers.CharField()
     title = serializers.CharField()
     content = serializers.CharField()
     date = serializers.DateField()
     hearts = serializers.IntegerField()
-    liked = serializers.SerializerMethodField()
     image = serializers.ImageField()
     genre = GenreSerializer()
 
     class Meta:
         model = Story
-        fields = ("__all__")
+        fields = ("uuid", "title", "content", "date", "hearts", "image", "genre")
         depth = 2
     
     def get_liked(self, obj):

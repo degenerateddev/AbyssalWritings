@@ -37,5 +37,5 @@
 </script>
 
 <div class="right-5 p-5 fixed z-[999]">
-    <button class="btn variant-ghost-primary" on:click={triggerToast}>Get back to reading</button>
+    <button class="btn variant-ghost-primary" on:click={triggerToast}>Weiterlesen</button>
 </div>

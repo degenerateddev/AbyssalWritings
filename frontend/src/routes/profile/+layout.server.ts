@@ -10,7 +10,7 @@ export const load: LayoutServerLoad = (async ({ cookies, url }) => {
     if (cookie !== undefined) {
         let tokens: Tokens = JSON.parse(cookie)
 
-        const response = await fetch(PUBLIC_BACKEND_URL + "/api/is-admin/", {
+        const response = await fetch(PUBLIC_BACKEND_URL + "/api/is-logged-in/", {
             method: "GET",
             headers: new Headers({
                 "Content-Type": "application/json",
@@ -39,18 +39,15 @@ export const load: LayoutServerLoad = (async ({ cookies, url }) => {
                     access: data.access,
                     refresh: tokens.refresh
                 });
-                
                 cookies.delete("tokens", {
                     path: "/"
                 });
-
                 cookies.set("tokens", new_tokens, {
                     path: "/",
                     httpOnly: true,
                     sameSite: 'strict',
                     secure: !dev
                 });
-
                 throw redirect(301, url.pathname)
             }
 

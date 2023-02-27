@@ -7,7 +7,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 import random
 
-from .serializers import StorySerializer, StoryLineSerializer, GenreSerializer, StoryUploadSerializer, RegisterSerializer
+from .serializers import StorySerializer, StoryLineSerializer, GenreSerializer, StoryUploadSerializer, RegisterSerializer, UserSerializer
 from .models import Story, StoryLine, Genre
 from .utils import get_user
 
@@ -76,10 +76,22 @@ def genre(request, genre):
 @api_view(["GET"])
 def story(request, uuid):
     story = Story.objects.filter(uuid=uuid)
+    user = get_user(request)
+    liked = False
 
     if story.exists():
-        serialized = StorySerializer(story.first(), context={'request': request})
-        return Response(serialized.data)
+        story = story.first()
+        
+        if user != None:
+            if user in story.liked_by.all():
+                liked = True
+    
+        serialized = StorySerializer(story, context={'request': request})
+
+        return Response({
+            "story": serialized.data,
+            "liked": liked
+        })
 
 @api_view(["GET"])
 def storyline(request, uuid):
@@ -120,6 +132,28 @@ def unlike(request):
         story.save()
 
         return Response(status=status.HTTP_200_OK)
+
+    return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def userData(request):
+    user = get_user(request)
+
+    if user != None:
+        user_serialized = UserSerializer(user)
+
+        likes = Story.objects.filter(liked_by=user)
+        saved = Story.objects.filter(saved_by=user)
+
+        likes_serialized = StorySerializer(likes, many=True)
+        saved_serialized = StorySerializer(saved, many=True)
+
+        return Response({
+            "user": user_serialized.data,
+            "likes": likes_serialized.data,
+            "saved": saved_serialized.data
+        })
 
     return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
@@ -326,4 +360,9 @@ def rmv_from_storyline(request):
 @api_view(["GET"])
 @permission_classes([IsAdminUser])
 def is_admin(request):
+    return Response(status=200)
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def is_logged_in(request):
     return Response(status=200)

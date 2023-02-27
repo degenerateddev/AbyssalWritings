@@ -8,16 +8,18 @@
     });
 </script>
 
-<div class="container mx-auto py-10">
-    <div class="flex justify-start">
-        <ol class="breadcrumb">
-            <li class="crumb"><a href="/stories">Stories</a></li>
-            <li class="crumb-separator" aria-hidden>&rsaquo;</li>
-            {#if story.genre !== null}
-                <li class="crumb"><a href="/genres/{story.genre.name}">{story.genre.name}</a></li>
+{#if story}
+    <div class="container mx-auto py-10">
+        <div class="flex justify-start">
+            <ol class="breadcrumb">
+                <li class="crumb"><a href="/stories">Stories</a></li>
                 <li class="crumb-separator" aria-hidden>&rsaquo;</li>
-            {/if}
-            <li class="crumb"><a href="/stories/story-{story.uuid}">{story.title}</a></li>
-        </ol>
+                {#if story.genre !== null}
+                    <li class="crumb"><a href="/genres/{story.genre.name}">{story.genre.name}</a></li>
+                    <li class="crumb-separator" aria-hidden>&rsaquo;</li>
+                {/if}
+                <li class="crumb"><a href="/stories/story-{story.uuid}">{story.title}</a></li>
+            </ol>
+        </div>
     </div>
-</div>
+{/if}
