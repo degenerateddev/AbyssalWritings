@@ -11,7 +11,7 @@ export const load = (async ({ params, cookies }) => {
     if (cookie !== undefined) {
         const tokens: Tokens = JSON.parse(cookie || "");
         const access = tokens.access;
-
+        
         response = await fetch(PUBLIC_BACKEND_URL + "/api/story/" + uuid + "/", {
             method: "GET",
             headers: {
@@ -20,7 +20,9 @@ export const load = (async ({ params, cookies }) => {
                 "Authorization": "Bearer " + access
             }
         });
-    } else {
+    } 
+    
+    if (cookie === undefined || response?.status === 401) {
         response = await fetch(PUBLIC_BACKEND_URL + "/api/story/" + uuid + "/", {
             method: "GET",
             headers: {

@@ -2,6 +2,8 @@
     import { Avatar, FileButton, toastStore, type ToastSettings } from "@skeletonlabs/skeleton";
     import { PUBLIC_BACKEND_URL } from "$env/static/public";
     import { userStore } from "$lib/stores";
+    import { drawerStore } from '@skeletonlabs/skeleton';
+    import type { DrawerSettings } from '@skeletonlabs/skeleton';
     import type { User, Story, UserAvatar } from "$lib/types";
     import StoryPreview from "comps/StoryPreview.svelte";
 	import Icon from "@iconify/svelte";
@@ -9,12 +11,20 @@
     export let data;
     let user: User = data.user;
     let avatar: UserAvatar = user.avatar;
-    let likes: Array<Story> = data.likes;
+    var likes: Array<Story> = data.likes;
     let saved: Array<Story> = data.saved;
 
     let date: string = user.date_joined.split("#")[0];
 
     let files: FileList;
+
+    function showLikes(): void {
+        const settings: DrawerSettings = {
+            id: "likesDrawer",
+            meta: { likes: likes }
+        };
+	    drawerStore.open(settings);
+    }
 
     async function profilePicUpload() {
         const formData = new FormData();
@@ -44,10 +54,10 @@
     }
 </script>
 
-<div class="container mx-auto h-full py-10">
+<div class="container mx-auto h-full">
 
     <div class="grid grid-cols-3 gap-10">
-        <div class="col-span-1">
+        <div class="col-span-3 md:col-span-1">
             <div class="card space-y-10 p-5">
                 <div class="card-header border-b-2 border-b-primary-600 py-5">
                     <div class="flex justify-center">
@@ -65,26 +75,21 @@
                     <h5 class="ml-auto">Beigetreten: {date}</h5>
                 </div>
                 <div class="card-footer">
-
+                    <button class="btn variant-ghost-primary w-full" on:click={showLikes}>
+                        <Icon icon="mdi:cards-heart" class="text-rose-800 text-4xl"></Icon>
+                        <span class="text-2xl">Likes</span>
+                    </button>
                 </div>
             </div>            
         </div>
 
-        <div class="col-span-2 space-y-5">
+        <div class="col-span-3 md:col-span-2 space-y-5">
             <div class="flex justify-center">
                 <h1>
-                    <Icon icon="mdi:cards-heart"></Icon>
-                </h1>
-            </div>
-            <div class="grid grid-flow-col">
-                {#each likes as like}
-                    <StoryPreview story={like}></StoryPreview>
-                {/each}
-            </div>
-            
-            <div class="flex justify-center">
-                <h1>
-                    <Icon icon="material-symbols:bookmark"></Icon>
+                    <div class="flex">
+                        <Icon icon="material-symbols:bookmark" class="text-yellow-600 text-4xl"></Icon>
+                        <span class="text-3xl">Gespeicherte Stories</span>
+                    </div>
                 </h1>
             </div>
             <div class="grid grid-flow-col">
@@ -93,6 +98,7 @@
                 {/each}
             </div>
         </div>
+
     </div>
 
 </div>

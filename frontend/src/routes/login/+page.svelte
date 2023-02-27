@@ -3,7 +3,7 @@
     import Icon from "@iconify/svelte";
 </script>
 
-<div class="container mx-auto h-full items-center flex justify-center">
+<div class="container mx-auto h-screen flex justify-center">
     <div class="grid grid-cols-2 space-x-10">
 
         <div class="col-span-1" use:focusTrap={true}>

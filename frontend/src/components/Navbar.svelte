@@ -26,19 +26,20 @@
     </svelte:fragment>
     <svelte:fragment slot="trail">
         <div class="btn-group-vertical md:btn-group variant-ghost-primary [&>*+*]:border-surface-900">
-            {#if $loggedInStore}
-                <Anchor to="/profile">
-                    <Icon icon="iconoir:profile-circle"></Icon>
-                </Anchor>
-            {/if}
             <Anchor to="/stories">
-                <Icon icon="ph:pen-nib"></Icon>
+                <Icon icon="ph:pen-nib" class="text-3xl"></Icon>
             </Anchor>
             <Anchor to="/genres">
-                <Icon icon="dashicons:screenoptions"></Icon>
+                <Icon icon="dashicons:screenoptions" class="text-3xl"></Icon>
             </Anchor>
             <Anchor to="/project">
-                <Icon icon="material-symbols:menu-book"></Icon>
+                <Icon icon="material-symbols:menu-book" class="text-3xl"></Icon>
+            </Anchor>
+            <Anchor to="/profile">
+                <Icon icon="iconoir:profile-circle" class="text-3xl"></Icon>
+            </Anchor>
+            <Anchor to="/login">
+                <Icon icon="grommet-icons:login" class="text-3xl"></Icon>
             </Anchor>
         </div>
     </svelte:fragment>

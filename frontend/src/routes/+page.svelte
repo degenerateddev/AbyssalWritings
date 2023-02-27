@@ -11,7 +11,7 @@
 	let fav: Array<Genre> = data.fav;
 </script>
 
-<div class="container h-full mx-auto flex justify-center py-10">
+<div class="container h-full mx-auto flex justify-center">
 	<div class="space-y-10 text-center">
 
 		<div class="flex justify-center py-10">

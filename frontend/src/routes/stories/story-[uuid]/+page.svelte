@@ -103,7 +103,7 @@
     
 </script>
 
-<div class="container mx-auto space-y-10">
+<div class="container mx-auto min-h-screen">
     {#if story}
     <Banner name={story.title} banner={story.image}></Banner>
     
@@ -125,7 +125,7 @@
             {/each}
         </div>
         <div class="flex gap-10 mt-10">
-            <ul class="px-5 float-right list-option border-primary-500 border-2">
+            <ul class="md:px-5 float-right list-option border-primary-500 border-2 my-auto">
                 <li>{story.date}</li>
                 <li>&rsaquo;</li>
                 <li>
@@ -135,7 +135,7 @@
                     </div>
                 </li>
             </ul>
-            <div class="space-x-10 ml-auto">
+            <div class="md:space-x-10 ml-auto my-auto">
                 {#if liked === true}
                     <button class="text-4xl hover:scale-105 duration-200 text-rose-800 hover:text-zinc-200" on:click={unlike}>
                         <Icon icon="mdi:cards-heart"></Icon>

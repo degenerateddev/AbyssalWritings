@@ -8,18 +8,16 @@
     if (!banner.includes(PUBLIC_BACKEND_URL)) {
         banner = PUBLIC_BACKEND_URL + banner;
     }
-
-    console.log(banner)
 </script>
 
 <div class="wrap relative border-stone-900 border-2">
-    <img class="w-full max-h-[55vh] bg-no-repeat object-fill sepia-0 hover:sepia duration-200" src="{banner}" alt="banner" />
-    <div class="container pt-10 pb-4 pl-4 backdrop-blur-sm bg-white/30 absolute bottom-0">
+    <img class="w-full max-h-[80vh] md:max-h-[55vh] bg-no-repeat object-fill sepia-0 hover:sepia duration-200" src="{banner}" alt="banner" />
+    <div class="container p-2 md:pt-10 md:pb-4 md:pl-4 backdrop-blur-sm bg-white/30 absolute bottom-0">
         <div class="flex justify-start">
             <h1 class="text-gray-900">{name}</h1>
         </div>
-        <div class="flex justify-start mt-10">
-            <span class="text-gray-900 text-lg">{description}</span>
+        <div class="flex justify-start md:mt-10">
+            <span class="text-gray-900 text-sm md:text-lg line-clamp-3">{description}</span>
         </div>
     </div>
 </div>

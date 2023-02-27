@@ -54,6 +54,6 @@ export const load: LayoutServerLoad = (async ({ cookies, url }) => {
         }
     }
 
-    throw redirect(301, "/")
+    throw redirect(301, "/login")
 
 }) satisfies LayoutServerLoad;

@@ -10,7 +10,7 @@
         <h1 class="font-extrabold tracking-tight">{title}</h1>
     </div>
     <div class="flex justify-center py-10">
-        <span class="text-base">{description}</span>
+        <span class="text-lg">{description}</span>
     </div>
     {#if horizontal}
         <div class="grid grid-cols-1 md:grid-cols-[auto_1fr_auto] gap-20">

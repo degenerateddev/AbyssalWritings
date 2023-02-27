@@ -1,10 +1,11 @@
 <script lang="ts">
     import Genre from "comps/Genre.svelte";
+	import type { PageData } from "./$types";
 
-    export let data: Object;
+    export let data: PageData;
 </script>
 
-<div class="container mx-auto py-10">
+<div class="container mx-auto">
     <div class="flex justify-center mb-20">
         <h1>Genres</h1>
     </div>

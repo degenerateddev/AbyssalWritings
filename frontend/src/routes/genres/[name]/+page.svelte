@@ -8,10 +8,10 @@
     let genre: Genre = data.genre;
 </script>
 
-<div class="container mx-auto py-10 space-y-10">
+<div class="container mx-auto space-y-10">
     <Banner name={genre.name} description={genre.description} banner={genre.banner}></Banner>
 
-    <div class="flex justify-evenly">
+    <div class="grid grid-flow-col">
         {#each stories as story}
             <StoryPreview story={story}></StoryPreview>
         {/each}

@@ -1,6 +1,5 @@
 <script lang="ts">
     export let to: string;
-
     export let primary: boolean = false;
 </script>
 

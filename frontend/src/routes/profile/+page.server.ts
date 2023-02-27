@@ -1,9 +1,11 @@
 import type { PageServerLoad } from './$types';
 import type { Tokens } from "$lib/types";
 import { PUBLIC_BACKEND_URL } from "$env/static/public";
+import { redirect } from '@sveltejs/kit';
  
 export const load = (async ({ params, request, cookies }) => {
     const cookie: string | undefined = cookies.get("tokens");
+
     const tokens: Tokens = JSON.parse(cookie || "");
     const access: string = tokens.access;
 
@@ -24,4 +26,5 @@ export const load = (async ({ params, request, cookies }) => {
             saved: data.saved
         }
     }
+
 }) satisfies PageServerLoad;
