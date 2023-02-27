@@ -54,7 +54,7 @@
     }
 </script>
 
-<div class="container mx-auto h-full">
+<div class="container mx-auto h-full min-h-screen">
 
     <div class="grid grid-cols-3 gap-10">
         <div class="col-span-3 md:col-span-1">

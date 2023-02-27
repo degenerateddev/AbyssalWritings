@@ -3,6 +3,6 @@
     export let primary: boolean = false;
 </script>
 
-<a href="{to}" class="btn" class:variant-ghost-primary={primary}>
+<a href="{to}" class="btn hover:bg-primary-600 bg-primary-800" class:variant-ghost-primary={primary}>
     <slot />
 </a>
