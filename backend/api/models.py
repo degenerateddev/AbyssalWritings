@@ -28,3 +28,8 @@ class Genre(models.Model):
     name = models.CharField(max_length=50)
     description = models.TextField()
     banner = models.ImageField(upload_to="banner/", null=True)
+
+class ProfilePicture(models.Model):
+    uuid = models.UUIDField(default=uuid.uuid4)
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+    image = models.ImageField(upload_to="profile-pictures/")

@@ -31,6 +31,14 @@ export const PUT: RequestHandler = (async ({ cookies, request, params }) => {
         case "unlike":
             url = PUBLIC_BACKEND_URL + "/api/unlike/";
             break;
+        
+        case "save":
+            url = PUBLIC_BACKEND_URL + "/api/save/";
+            break;
+
+        case "unsave":
+            url = PUBLIC_BACKEND_URL + "/api/unsave/";
+            break;
 
         default:
             url = "";

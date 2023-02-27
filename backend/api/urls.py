@@ -12,8 +12,11 @@ urlpatterns = [
 
     path("like/", views.like, name="like"),
     path("unlike/", views.unlike, name="unlike"),
+    path("save/", views.save, name="save"),
+    path("unsave/", views.unsave, name="unsave"),
 
     path("user-data/", views.userData, name="user-data"),
+    path("profile-pic/", views.uploadProfilePic, name="profile-pic"),
 
     path("admin/overview/", views.story_overview, name="overview"),
     path("admin/add-story/", views.add_story, name="add-story"),

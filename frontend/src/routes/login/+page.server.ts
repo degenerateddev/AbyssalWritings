@@ -2,7 +2,7 @@ import { fail, redirect } from '@sveltejs/kit';
 import type { Actions } from './$types';
 import { dev } from '$app/environment';
 import { PUBLIC_BACKEND_URL } from "$env/static/public";
-import { userStore } from "$lib/stores";
+import { loggedInStore } from "$lib/stores";
 import type { User } from "$lib/types";
  
 export const actions = {
@@ -35,6 +35,7 @@ export const actions = {
                 sameSite: 'strict',
                 secure: !dev
             });
+            loggedInStore.set(true);
             throw redirect(303, "/profile");
         }
     },
@@ -84,6 +85,7 @@ export const actions = {
                 sameSite: 'strict',
                 secure: !dev
             });
+            loggedInStore.set(true);
             throw redirect(303, "/profile");
         }
     }

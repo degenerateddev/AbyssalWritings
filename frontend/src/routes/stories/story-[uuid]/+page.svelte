@@ -8,6 +8,7 @@
 
     let story: Story = data.story;
     let liked: boolean = data.liked;
+    let saved: boolean = data.saved;
 
     var paragraphs: Array<String>;
     
@@ -59,6 +60,46 @@
         }
     }
 
+    async function save() {
+        const response = await fetch("/actions/save", {
+            method: "PUT",
+            headers: new Headers({
+                "Content-Type": "application/x-www-form-urlencoded",
+            }),
+            body: JSON.stringify({
+                "uuid": story.uuid
+            })
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            if (data.error !== undefined) {
+                window.location.replace("/login/")
+            }
+            saved = true;
+        }
+    }
+
+    async function unsave() {
+        const response = await fetch("/actions/unsave", {
+            method: "PUT",
+            headers: new Headers({
+                "Content-Type": "application/x-www-form-urlencoded",
+            }),
+            body: JSON.stringify({
+                "uuid": story.uuid
+            })
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            if (data.error !== undefined) {
+                window.location.replace("/login/")
+            }
+            saved = false;
+        }
+    }
+
     
 </script>
 
@@ -96,12 +137,21 @@
             </ul>
             <div class="space-x-10 ml-auto">
                 {#if liked === true}
-                    <button class="text-4xl hover:scale-105 duration-200 text-rose-800 hover:text-white" on:click={unlike}>
+                    <button class="text-4xl hover:scale-105 duration-200 text-rose-800 hover:text-zinc-200" on:click={unlike}>
                         <Icon icon="mdi:cards-heart"></Icon>
                     </button>
                 {:else}
-                    <button class="text-4xl hover:scale-105 duration-200 text-white hover:text-rose-800" on:click={like}>
+                    <button class="text-4xl hover:scale-105 duration-200 text-zinc-200 hover:text-rose-800" on:click={like}>
                         <Icon icon="mdi:cards-heart"></Icon>
+                    </button>
+                {/if}
+                {#if saved === true}
+                    <button class="text-4xl text-yellow-600 hover:text-zinc-200 hover:scale-105 duration-200" on:click={unsave}>
+                        <Icon icon="material-symbols:bookmark-add"></Icon>
+                    </button>
+                {:else}
+                    <button class="text-4xl text-zinc-200 hover:text-yellow-600 hover:scale-105 duration-200" on:click={save}>
+                        <Icon icon="material-symbols:bookmark-add"></Icon>
                     </button>
                 {/if}
                 <button class="text-4xl text-zinc-200 hover:text-zinc-50 hover:scale-105 duration-200">

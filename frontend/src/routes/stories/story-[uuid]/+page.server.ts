@@ -36,7 +36,8 @@ export const load = (async ({ params, cookies }) => {
         storyStore.set(data.story);
         return {
             story: data.story,
-            liked: data.liked
+            liked: data.liked,
+            saved: data.saved
         };
     }
 }) satisfies PageServerLoad;

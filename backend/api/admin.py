@@ -6,3 +6,4 @@ from .models import *
 admin.site.register(Story)
 admin.site.register(StoryLine)
 admin.site.register(Genre)
+admin.site.register(ProfilePicture)

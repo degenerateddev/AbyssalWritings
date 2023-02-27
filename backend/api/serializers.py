@@ -2,13 +2,30 @@ from rest_framework.serializers import ModelSerializer, Serializer
 from rest_framework import serializers
 from django.contrib.auth.models import User
 
-from .models import Story, StoryLine, Genre
+from .models import Story, StoryLine, Genre, ProfilePicture
 from .utils import get_user
 
+class ProfilePicSerializer(ModelSerializer):
+    class Meta:
+        model = ProfilePicture
+        fields = ("uuid", "image",)
+
 class UserSerializer(ModelSerializer):
+    date_joined = serializers.DateTimeField(format="%d-%m-%Y#%H:%M:%S")
+    avatar = serializers.SerializerMethodField()
+    
     class Meta:
         model = User
-        fields = ("username", "email",)
+        fields = ("username", "email", "avatar", "date_joined")
+    
+    def get_avatar(self, obj):
+        pp = ProfilePicture.objects.filter(user=obj)
+
+        if pp.exists():
+            serialized = ProfilePicSerializer(pp.first())
+            return serialized.data
+        
+        return None
 
 class RegisterSerializer(ModelSerializer):
     class Meta:

@@ -4,3 +4,4 @@ import { localStorageStore } from "@skeletonlabs/skeleton";
 
 export const storyStore: Writable<Story> = localStorageStore("storyStore", "");
 export const userStore: Writable<User> = writable()
+export const loggedInStore: Writable<Boolean> = writable(false);

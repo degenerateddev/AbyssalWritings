@@ -8,7 +8,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 import random
 
 from .serializers import StorySerializer, StoryLineSerializer, GenreSerializer, StoryUploadSerializer, RegisterSerializer, UserSerializer
-from .models import Story, StoryLine, Genre
+from .models import Story, StoryLine, Genre, ProfilePicture
 from .utils import get_user
 
 class TokenRegister(APIView):
@@ -78,6 +78,7 @@ def story(request, uuid):
     story = Story.objects.filter(uuid=uuid)
     user = get_user(request)
     liked = False
+    saved = False
 
     if story.exists():
         story = story.first()
@@ -85,12 +86,16 @@ def story(request, uuid):
         if user != None:
             if user in story.liked_by.all():
                 liked = True
+            
+            if user in story.saved_by.all():
+                saved = True
     
         serialized = StorySerializer(story, context={'request': request})
 
         return Response({
             "story": serialized.data,
-            "liked": liked
+            "liked": liked,
+            "saved": saved
         })
 
 @api_view(["GET"])
@@ -135,6 +140,38 @@ def unlike(request):
 
     return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+@api_view(["PUT"])
+@permission_classes([IsAuthenticated])
+def save(request):
+    uuid = request.data.get("uuid")
+    story = Story.objects.filter(uuid=uuid)
+    user = get_user(request)
+
+    if story.exists() and user != None and user not in story.first().saved_by.all():
+        story = story.first()
+        story.saved_by.add(user)
+        story.save()
+
+        return Response(status=status.HTTP_200_OK)
+    
+    return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@api_view(["PUT"])
+@permission_classes([IsAuthenticated])
+def unsave(request):
+    uuid = request.data.get("uuid")
+    story = Story.objects.filter(uuid=uuid)
+    user = get_user(request)
+
+    if story.exists() and user != None and user in story.first().saved_by.all():
+        story = story.first()
+        story.saved_by.remove(user)
+        story.save()
+
+        return Response(status=status.HTTP_200_OK)
+
+    return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def userData(request):
@@ -155,6 +192,21 @@ def userData(request):
             "saved": saved_serialized.data
         })
 
+    return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def uploadProfilePic(request):
+    user = get_user(request)
+
+    if user != None:
+        pp, created = ProfilePicture.objects.get_or_create(user=user)
+        img = request.data.get("image")
+        pp.image = img
+        pp.save()
+
+        return Response(status=status.HTTP_200_OK)
+    
     return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
 ### ADMIN ###

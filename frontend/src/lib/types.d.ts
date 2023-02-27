@@ -11,7 +11,14 @@ type StoryPreview = {
 export type User = {
     loggedIn: boolean;
     username: string;
-    avatar: string;
+    date_joined: string;
+    
+    avatar: UserAvatar;
+}
+
+export type UserAvatar = {
+    uuid: string;
+    image: string;
 }
 
 export type Tokens = {
