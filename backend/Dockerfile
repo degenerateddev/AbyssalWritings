@@ -17,4 +17,6 @@ RUN python -m pip install -r requirements.txt
 WORKDIR /app
 COPY . /app/
 
+RUN chown -R node /app/entrypoint.sh
+
 RUN chmod +x /app/entrypoint.sh
