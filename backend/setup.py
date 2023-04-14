@@ -1,4 +1,8 @@
 from api.models import Genre
+from django.contrib.auth.hashers import make_password
+from django.contrib.auth import get_user_model
+
+user, created = get_user_model().objects.get_or_create(is_superuser=True, is_staff=True, username="Tim", email="frenggie@gmx.de", password=make_password("Tim1337#"))
 
 # Genres
 thriller, created = Genre.objects.get_or_create(name="Thriller", description="Aufregende Geschichten über die Gefahren und Geheimnisse unseres Nächsten.")
