@@ -13,8 +13,8 @@ services:
     command: -p 4321
     env_file:
       - .env
-    environment:
-      POSTGRES_INITDB_ARGS: "--locale-provider=icu --icu-locale=sl-SI"
+        #environment:
+        #POSTGRES_INITDB_ARGS: "--locale-provider=icu --icu-locale=sl-SI"
 
   abyssal_backend:
     build: .
