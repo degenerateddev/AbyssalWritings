@@ -530,7 +530,8 @@
 
 <style lang="postcss">
     button {
-        @apply btn p-2 border-2 border-stone-900 bg-stone-800;
+        /* @apply btn p-2 border-2 border-stone-900 bg-stone-800; */
+        @apply p-2 border-2 border-stone-900 bg-stone-800;
     }
 
 	button.active {

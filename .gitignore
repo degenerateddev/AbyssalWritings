@@ -1,1 +1,13 @@
 venv/
+
+.env
+
+data/
+
+backend/api/__pycache__/
+backend/api/migrations/
+backend/backend/__pycache__/
+
+backend/media/
+
+backend/db.sqlite3
