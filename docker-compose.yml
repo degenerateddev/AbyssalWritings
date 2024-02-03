@@ -1,0 +1,54 @@
+version: '3.4'
+
+services:
+
+  db:
+    image: postgres:15.3
+    container_name: 'abyssal_db'
+    command: -p 5437
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    restart: always
+    ports:
+      - '5437:5437'
+    env_file:
+      - .env
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: 'abyssal_backend'
+    command: python manage.py runserver 0.0.0.0:8083
+    volumes:
+      - .:/abyssal_app
+    ports:
+      - 8083:8083
+    env_file:
+      - .env
+    restart: always
+    depends_on:
+      - db
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: 'abyssal_frontend'
+    ports:
+      - '3003:3000'
+    restart: always
+    volumes:
+      - .:/abyssal_app
+    depends_on:
+      - backend
+  
+  cdn:
+    image: nginx
+    container_name: 'abyssal_cdn'
+    ports:
+      - '2003:80'
+    volumes:
+      - /home/tim/AbyssalWritings/backend:/usr/share/nginx/html
+    depends_on:
+      - frontend

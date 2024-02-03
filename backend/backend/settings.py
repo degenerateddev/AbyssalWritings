@@ -26,14 +26,22 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ["0.0.0.0", "192.145.37.253"]
+ALLOWED_HOSTS = ["192.145.37.253", "localhost", "127.0.0.1", "www.abyssal.blog", "api.abyssal.blog"]
 
+CORS_ALLOWED_ORIGINS = ["http://127.0.0.1:3003", "https://abyssal.blog"]
+
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+SECURE_SSL_REDIRECT = True
+CSRF_TRUSTED_ORIGINS = ["https://api.abyssal.blog"]
 
 # Application definition
 
 INSTALLED_APPS = [
+    'whitenoise.runserver_nostatic',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -50,6 +58,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -59,12 +68,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:5173',
-    'http://127.0.0.1:5173',
-]
-#CORS_ORIGIN_ALLOW_ALL = True
-#CORS_ALLOW_CREDENTIALS = False
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 ROOT_URLCONF = 'backend.urls'
 
@@ -93,11 +97,11 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 DATABASES = {
     "default" : {
         "ENGINE" : "django.db.backends.postgresql_psycopg2",
-        "NAME" : config("POSTGRES_DB"),
+        "NAME" : "db",
         "USER" : config("POSTGRES_USER"),
         "PASSWORD" : config("POSTGRES_PASSWORD"),
         "HOST" : config("POSTGRES_HOST"),
-        "PORT" : "4321"
+        "PORT" : "5437"
     }
 }
 
