@@ -11,3 +11,5 @@ backend/backend/__pycache__/
 backend/media/
 
 backend/db.sqlite3
+
+frontend/package-lock.json
