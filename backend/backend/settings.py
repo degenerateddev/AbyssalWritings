@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 from pathlib import Path
 from datetime import timedelta
 import os
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -22,12 +23,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-z)(fsg9#59uqv%20y29t%t_8-%-hny3jyr#zwq^65f-o(g_bxw'
+SECRET_KEY = config("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["0.0.0.0", "192.145.37.253"]
 
 
 # Application definition
@@ -90,9 +91,13 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default" : {
+        "ENGINE" : "django.db.backends.postgresql_psycopg2",
+        "NAME" : config("POSTGRES_DB"),
+        "USER" : config("POSTGRES_USER"),
+        "PASSWORD" : config("POSTGRES_PASSWORD"),
+        "HOST" : config("POSTGRES_HOST"),
+        "PORT" : "4321"
     }
 }
 

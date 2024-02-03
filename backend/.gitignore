@@ -1,8 +1,10 @@
 api/__pycache__/
 backend/__pycache__/
 
-api/migrations/
-
 media/
+
+data/
+
+.env
 
 db.sqlite3

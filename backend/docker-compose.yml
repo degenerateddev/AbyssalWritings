@@ -1,0 +1,31 @@
+version: '3.4'
+
+services:
+
+  abyssal_db:
+    image: postgres:15.2-alpine
+    container_name: 'abyssal_db'
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    restart: always
+    ports:
+      - '4321:4321'
+    command: -p 4321
+    env_file:
+      - .env
+        #environment:
+        #POSTGRES_INITDB_ARGS: "--locale-provider=icu --icu-locale=sl-SI"
+
+  abyssal_backend:
+    build: .
+    container_name: 'abyssal_backend'
+    command: python manage.py runserver 0.0.0.0:5555
+    volumes:
+      - .:/abyssal_app
+    ports:
+      - 5555:5555
+    env_file:
+      - .env
+    restart: always
+    depends_on:
+      - abyssal_db
